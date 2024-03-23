@@ -8,7 +8,6 @@ import AuthLayout1 from '../layouts/AuthLayouts/AuthLayout1'
 import Dashboard2 from '../views/Dashboards/Dashboard2.vue'
 import Dashboard1 from '../views/Dashboards/Dashboard1.vue'
 import Dashboard3 from '../views/Dashboards/Dashboard3'
-import Dashboard4 from '../views/Dashboards/Dashboard4'
 import Dashboard5 from '../views/Dashboards/Dashboard5.vue'
 
 /* UIElements View */
@@ -122,7 +121,7 @@ const childRoutes = (prop, mode) => [
     path: '/',
     name: prop + '.home-4',
     meta: { dark: mode, auth: true, name: 'Home 4' },
-    component: Dashboard4
+    component: FarmaciaIIII
   },
   {
     path: 'farmintra',
