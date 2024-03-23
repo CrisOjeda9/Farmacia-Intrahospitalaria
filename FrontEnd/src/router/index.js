@@ -92,87 +92,41 @@ import ValidateWizard from '../views/FormWizard/ValidateWizard.vue'
 import VerticalWizard from '../views/FormWizard/VerticalWizard.vue'
 // Vue.use(VueRouter)
 //IMPORT NEW VIEW PROYECTO 8A
-import DireccionG from '../views/DireccionGeneral/DireccionGeneral.vue'
-import ComiteT from '../views/ComiteTransplantes/comitetransplantes.vue'
 import FarmaciaI from '../views/FarmaciaIntraHospitalaria/farmaciaintrahospitalaria.vue'
-import Pediatria from '../views/Pediatria/pediatria.vue'
-import ProgramacionQ from '../views/ProgramacionQuirurgica/programacionquirurgica.vue'
-import RadiologiaI from '../views/RadiologiaImagen/radiologiaimagen.vue'
-import RecursosH from '../views/RecursosHumanos/recursoshumanos.vue'
-import RegistrosM from '../views/RegistrosMedicos/registrosmedicos.vue'
+import FarmaciaII from '../views/FarmaciaIntraHospitalaria/farmaciainventario.vue'
+import FarmaciaIII from '../views/FarmaciaIntraHospitalaria/nuevomedicamento.vue'
+import FarmaciaIIII from '../views/FarmaciaIntraHospitalaria/dashboard.vue'
+import FarmaciaIIIII from '../views/FarmaciaIntraHospitalaria/dispensaciondetalles.vue'
 
 const childRoutes = (prop, mode) => [
-  {
-    path: 'home-1',
-    name: prop + '.home-1',
-    meta: { dark: mode, auth: true, name: 'Home 1' },
-    component: Dashboard1
-  },
-  {
-    path: 'home-2',
-    name: prop + '.home-2',
-    meta: { dark: mode, auth: true, name: 'Home 2' },
-    component: Dashboard2
-  },
-  {
-    path: 'home-3',
-    name: prop + '.home-3',
-    meta: { dark: mode, auth: true, name: 'Home 3' },
-    component: Dashboard3
-  },
-  {
-    path: '/',
-    name: prop + '.home-4',
-    meta: { dark: mode, auth: true, name: 'Home 4' },
-    component: Dashboard4
-  },
-  {
-    path: 'dirgral',
-    name: prop + '.dirgral',
-    meta: { dark: mode, auth: true, name: 'Dirección General' },
-    component: DireccionG
-  },
-  {
-    path: 'comtrans',
-    name: prop + '.comtrans',
-    meta: { dark: mode, auth: true, name: 'Comite de Transplantes' },
-    component: ComiteT
-  },
   {
     path: 'farmintra',
     name: prop + '.farmintra',
     meta: { dark: mode, auth: true, name: 'Farmacia Intrahospitalaria' },
     component: FarmaciaI
+  },{
+    path: 'farmintraInv',
+    name: prop + '.farmintraInv',
+    meta: { dark: mode, auth: true, name: 'Farmacia Intrahospitalaria' },
+    component: FarmaciaII
   },
   {
-    path: 'pediatria',
-    name: prop + '.pediatria',
-    meta: { dark: mode, auth: true, name: 'Pediatria' },
-    component: Pediatria
+    path: 'nuevoMed',
+    name: prop + '.nuevoMEd',
+    meta: { dark: mode, auth: true, name: 'Farmacia Intrahospitalaria' },
+    component: FarmaciaIII
   },
   {
-    path: 'prograq',
-    name: prop + '.prograq',
-    meta: { dark: mode, auth: true, name: 'Programación Quirurgica' },
-    component: ProgramacionQ
+    path: 'farmadash',
+    name: prop + '.farmadash',
+    meta: { dark: mode, auth: true, name: 'Farmacia Intrahospitalaria' },
+    component: FarmaciaIIII
   },
   {
-    path: 'radiologiai',
-    name: prop + '.radiologiai',
-    meta: { dark: mode, auth: true, name: 'Radiologia e Imagen' },
-    component: RadiologiaI
-  },
-  {
-    path: 'recursosh',
-    name: prop + '.recursosh',
-    meta: { dark: mode, auth: true, name: 'Recursos humanos' },
-    component: RecursosH
-  },
-  {
-    path: 'registrosm',
-    name: prop + '.registrosm',
-    meta: { dark: mode, auth: true, name: 'Registros Medicos' },
-    component: RegistrosM
+    path: 'farmaDis',
+    name: prop + '.farmaDis',
+    meta: { dark: mode, auth: true, name: 'Farmacia Intrahospitalaria' },
+    component: FarmaciaIIIII
   },
   {
     path: 'covid-19',
