@@ -92,6 +92,7 @@ import ValidateWizard from '../views/FormWizard/ValidateWizard.vue'
 import VerticalWizard from '../views/FormWizard/VerticalWizard.vue'
 // Vue.use(VueRouter)
 //IMPORT NEW VIEW PROYECTO 8A
+
 import FarmaciaI from '../views/FarmaciaIntraHospitalaria/farmaciaintrahospitalaria.vue'
 import FarmaciaII from '../views/FarmaciaIntraHospitalaria/farmaciainventario.vue'
 import FarmaciaIII from '../views/FarmaciaIntraHospitalaria/nuevomedicamento.vue'
@@ -99,6 +100,30 @@ import FarmaciaIIII from '../views/FarmaciaIntraHospitalaria/dashboard.vue'
 import FarmaciaIIIII from '../views/FarmaciaIntraHospitalaria/dispensaciondetalles.vue'
 
 const childRoutes = (prop, mode) => [
+  {
+    path: 'home-1',
+    name: prop + '.home-1',
+    meta: { dark: mode, auth: true, name: 'Home 1' },
+    component: Dashboard1
+  },
+  {
+    path: 'home-2',
+    name: prop + '.home-2',
+    meta: { dark: mode, auth: true, name: 'Home 2' },
+    component: Dashboard2
+  },
+  {
+    path: 'home-3',
+    name: prop + '.home-3',
+    meta: { dark: mode, auth: true, name: 'Home 3' },
+    component: Dashboard3
+  },
+  {
+    path: '/',
+    name: prop + '.home-4',
+    meta: { dark: mode, auth: true, name: 'Home 4' },
+    component: Dashboard4
+  },
   {
     path: 'farmintra',
     name: prop + '.farmintra',
