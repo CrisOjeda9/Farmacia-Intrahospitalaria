@@ -1,383 +1,184 @@
 <template>
-    <b-container fluid>
-      <b-row>
-        <b-col lg="6">
-          <iq-card>
-            <template v-slot:headerTitle>
-              <h4 class="card-title">Farmacias Intrahospitalarias</h4>
-            </template>
-            <template v-slot:body>
-              <p>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi
-                vulputate, ex ac venenatis mollis, diam nibh finibus leo
-              </p>
-              <div
-                class="checkbox d-inline-block me-2"
-                v-for="(item, index) in state"
-                :key="index"
-              >
-                <input
-                  type="checkbox"
-                  class="checkbox-input"
-                  :id="`basic-checkbox-${index}`"
-                  v-model="item.checked"
-                  :disabled="item.disabled"
-                />
-                <label :for="`basic-checkbox-${index}`" class="ms-1">{{
-                  item.label
-                }}</label>
-              </div>
-            </template>
-          </iq-card>
-        </b-col>
-        <b-col lg="6">
-          <iq-card>
-            <template v-slot:headerTitle>
-              <h4 class="card-title">Custom Checkbox</h4>
-            </template>
-            <template v-slot:body>
-              <p>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi
-                vulputate, ex ac venenatis mollis, diam nibh finibus leo
-              </p>
-  
-              <b-form-checkbox
-                v-for="(item, index) in custom_checkbox"
-                class="custom-switch-color"
-                :class="item.checked === true ? 'bg-primary border-primary' : ''"
-                :color="item.color"
-                v-model="item.checked"
-                :disabled="item.disabled"
-                name="check-button"
-                inline
-                v-bind:key="index"
-              >
-                {{ item.label }}
-              </b-form-checkbox>
-            </template>
-          </iq-card>
-        </b-col>
-        <b-col lg="6">
-          <iq-card>
-            <template v-slot:headerTitle>
-              <h4 class="card-title">Custom Color</h4>
-            </template>
-            <template v-slot:body>
-              <p>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi
-                vulputate, ex ac venenatis mollis, diam nibh finibus leo
-              </p>
-              <div class="d-flex gap-3 flex-wrap">
-                <div
-                  v-for="(item, index) in customColor"
-                  :key="index"
-                  class="custom-control custom-checkbox custom-checkbox-color custom-control-inline"
-                >
-                  <div
-                    class="custom-control custom-checkbox custom-checkbox-color custom-control-inline"
-                  >
-                    <input
-                      type="checkbox"
-                      :class="`bg-${item.color} border-${item.color}`"
-                      class="custom-control-input"
-                      :disabled="item.disabled"
-                      :id="item.label"
-                    />
-                    <label class="custom-control-label" :for="item.label">{{
-                      item.label
-                    }}</label>
-                  </div>
-                </div>
-              </div>
-            </template>
-          </iq-card>
-        </b-col>
-        <b-col lg="6">
-          <iq-card>
-            <template v-slot:headerTitle>
-              <h4 class="card-title">Color</h4>
-            </template>
-            <template v-slot:body>
-              <p>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi
-                vulputate, ex ac venenatis mollis, diam nibh finibus leo
-              </p>
-  
-              <div class="d-flex gap-3 flex-wrap">
-                <div
-                  v-for="(item, index) in color"
-                  class="custom-control custom-checkbox custom-checkbox-color-check custom-control-inline"
-                  v-bind:key="index"
-                >
-                  <input
-                    type="checkbox"
-                    :class="
-                      item.checked === true
-                        ? `bg-${item.color} border-${item.color} `
-                        : ''
-                    "
-                    v-model="item.checked"
-                    class="custom-control-input me-1"
-                    :id="item.id"
-                  />
-                  <label class="custom-control-label" :for="item.id">
-                    {{ item.label }}</label
-                  >
-                </div>
-              </div>
-            </template>
-          </iq-card>
-        </b-col>
-        <b-col lg="6">
-          <iq-card>
-            <template v-slot:headerTitle>
-              <h4 class="card-title">Boolean Checkbox</h4>
-            </template>
-            <template v-slot:body>
-              <p>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi
-                vulputate, ex ac venenatis mollis, diam nibh finibus leo
-              </p>
-              <div class="d-flex gap-3 flex-wrap">
-                <b-form-checkbox
-                  v-for="(item, index) in bool"
-                  v-model="item.checked"
-                  :class="custom - control - label"
-                  :disabled="item.disabled"
-                  name="check-button"
-                  v-bind:key="index"
-                >
-                  {{ item.label }}
-                </b-form-checkbox>
-              </div>
-            </template>
-          </iq-card>
-        </b-col>
-        <b-col lg="6">
-          <iq-card>
-            <template v-slot:headerTitle>
-              <h4 class="card-title">Change Icon</h4>
-            </template>
-            <template v-slot:body>
-              <p>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi
-                vulputate, ex ac venenatis mollis, diam nibh finibus leo
-              </p>
-              <div class="d-flex gap-3 flex-wrap">
-                <div
-                  v-for="(item, index) in icon"
-                  class="custom-control custom-checkbox checkbox-icon custom-control-inline"
-                  v-bind:key="index"
-                >
-                  <input
-                    type="checkbox"
-                    class="custom-control-input"
-                    :id="`customSwitch-1-${index}`"
-                    v-model="item.checked"
-                  />
-                  <label
-                    class="custom-control-label"
-                    :for="`customSwitch-1-${index}`"
-                    v-html="item.label"
-                  ></label>
-                </div>
-              </div>
-            </template>
-          </iq-card>
-        </b-col>
-      </b-row>
-    </b-container>
-  </template>
-  <script>
-  import { xray } from "../../config/pluginInit";
-  import iqCard from "../../components/xray/cards/iq-card";
-  export default {
-    name: "FormCheckboxes",
-    components: { iqCard },
-    mounted() {
-      xray.index();
+  <b-container fluid>
+    <b-row>
+      <b-col md="12">
+        <iq-card>
+          <template v-slot:headerTitle>
+            <h4 class="card-title">Detalles Lotes</h4>
+          </template>
+          <template v-slot:body>
+            <b-row>
+
+              <b-col md="12" class="table-responsive w-100">
+                <b-table striped bordered hover :items="rows" :fields="columns">
+                  <template v-slot:cell(id)="data">
+                    <span>{{ data.index + 1 }}</span>
+                  </template>
+                  <template v-slot:cell(codigo)="data">
+                    <span>{{ data.item.codigo }}</span>
+                  </template>
+                  <template v-slot:cell(nombre_generico)="data">
+                    <span>{{ data.item.nombre_generico }}</span>
+                  </template>
+                  <template v-slot:cell(nombre_comercial)="data"> <!-- Ajuste aquí -->
+                    <span>{{ data.item.nombre_comercial }}</span>
+                  </template>
+                  <template v-slot:cell(tipo_presentacion)="data">
+                    <span>{{ data.item.tipo_presentacion }}</span>
+                  </template>
+                  <template v-slot:cell(via_administracion)="data">
+                    <span>{{ data.item.via_administracion }}</span>
+                  </template>
+                  <template v-slot:cell(cantidad)="data">
+                    <span v-if="!data.item.editable">{{ data.item.cantidad }}</span>
+                    <input v-else type="number" v-model="data.item.cantidad" class="form-control" ref="editableInput">
+                  </template>
+                  <template v-slot:cell(precio_costo)="data">
+                    <span v-if="!data.item.editable">{{ data.item.precio_costo }}</span>
+                    <input v-else type="number" v-model="data.item.precio_costo" class="form-control"
+                      ref="editableInput">
+                  </template>
+                  <template v-slot:cell(precio_venta)="data">
+                    <span v-if="!data.item.editable">{{ data.item.precio_venta }}</span>
+                    <input v-else type="number" v-model="data.item.precio_venta" class="form-control"
+                      ref="editableInput">
+                  </template>
+                  <template v-slot:cell(numero_lote)="data">
+                    <span v-if="!data.item.editable">{{ data.item.numero_lote }}</span>
+                    <input v-else v-model="data.item.numero_lote" class="form-control" ref="editableInput">
+                  </template>
+                  <template v-slot:cell(fecha_solicitud)="data"> <!-- Ajuste aquí -->
+                    <span v-if="!data.item.editable">{{ formatDate(data.item.fecha_solicitud) }}</span>
+                    <input v-else type="date" v-model="data.item.fecha_solicitud" class="form-control"
+                      ref="editableInput">
+                  </template>
+                  <template v-slot:cell(fecha_entrega)="data"> <!-- Ajuste aquí -->
+                    <span v-if="!data.item.editable">{{ formatDate(data.item.fecha_entrega) }}</span>
+                    <input v-else type="date" v-model="data.item.fecha_entrega" class="form-control"
+                      ref="editableInput">
+                  </template>
+                  <template v-slot:cell(fecha_caducidad)="data">
+                    <span v-if="!data.item.editable">{{ formatDate(data.item.fecha_caducidad) }}</span>
+                    <input v-else type="date" v-model="data.item.fecha_caducidad" class="form-control"
+                      ref="editableInput">
+                  </template>
+                  <template v-slot:cell(descripcion)="data"> <!-- Ajuste aquí -->
+                    <span>{{ data.item.descripcion }}</span>
+                  </template>
+                  <template v-slot:cell(acciones)="data">
+                    <div>
+                      <b-button variant="link" size="sm" @click="remove(data.item)">
+                        <i class="ri-delete-bin-line text-danger"></i>
+                      </b-button>
+                      <b-button variant="link" size="sm" @click="toggleEdit(data.item)">
+                        <i class="ri-edit-line text-primary"></i>
+                      </b-button>
+                    </div>
+                  </template>
+                </b-table>
+
+              </b-col>
+            </b-row>
+          </template>
+        </iq-card>
+      </b-col>
+    </b-row>
+  </b-container>
+</template>
+
+<script>
+import { useRouter } from 'vue-router'
+import { xray } from '../../config/pluginInit'
+import iqCard from '../../components/xray/cards/iq-card'
+
+export default {
+  name: 'InventarioMedicamentos',
+  components: { iqCard },
+  setup() {
+    const router = useRouter()
+
+    const redirectToNewMedicine = () => {
+      router.push('/nuevoMed')
+    }
+
+    return { redirectToNewMedicine }
+  },
+  mounted() {
+    xray.index()
+  },
+  methods: {
+    remove(item) {
+      let index = this.rows.indexOf(item)
+      this.rows.splice(index, 1)
     },
-    data() {
-      return {
-        state: [
-          {
-            label: "Primary / Inactive",
-            checked: false,
-            disabled: false,
-          },
-          {
-            label: "Primary / Active",
-            checked: true,
-            disabled: false,
-          },
-          {
-            label: "Disabled / Inactive",
-            checked: false,
-            disabled: false,
-          },
-          {
-            label: "Active / Disable",
-            checked: true,
-            disabled: true,
-          },
-        ],
-        custom_checkbox: [
-          {
-            label: "Primary / Inactive",
-            checked: false,
-            disabled: false,
-          },
-          {
-            label: "Primary / Active",
-            checked: true,
-            disabled: false,
-          },
-          {
-            label: "Primary - inactive - disabled",
-            checked: false,
-            disabled: false,
-          },
-          {
-            label: "Primary - active - disabled",
-            checked: true,
-            disabled: true,
-          },
-        ],
-        text: [
-          {
-            activeLabel: "On",
-            inactiveLabel: "Off",
-            label: "Primary",
-            class: "primary",
-            checked: true,
-          },
-          {
-            activeLabel: "True",
-            inactiveLabel: "False",
-            label: "Success",
-            class: "success",
-            checked: true,
-          },
-          {
-            activeLabel: "Yes",
-            inactiveLabel: "No",
-            label: "Danger",
-            class: "danger",
-            checked: true,
-          },
-        ],
-        customColor: [
-          {
-            label: "Primary",
-            color: "primary",
-            checked: true,
-          },
-          {
-            label: "Success",
-            color: "success",
-            checked: true,
-          },
-          {
-            label: "Danger",
-            color: "danger",
-            checked: true,
-          },
-          {
-            label: "Warning",
-            color: "warning",
-            checked: true,
-          },
-          {
-            label: "Dark",
-            color: "dark",
-            checked: true,
-          },
-          {
-            label: "Info",
-            color: "info",
-            checked: true,
-          },
-        ],
-        color: [
-          {
-            id: 1,
-            label: "Primary",
-            color: "primary",
-            checked: true,
-          },
-          {
-            id: 2,
-            label: "Success",
-            color: "success",
-            checked: true,
-          },
-          {
-            id: 3,
-            label: "Danger",
-            color: "danger",
-            checked: true,
-          },
-          {
-            id: 4,
-            label: "Warning",
-            color: "warning",
-            checked: true,
-          },
-          {
-            id: 5,
-            label: "Dark",
-            color: "dark",
-            checked: true,
-          },
-          {
-            id: 6,
-            label: "Info",
-            color: "info",
-            checked: true,
-          },
-        ],
-        icon: [
-          {
-            label: '<i class="fa fa-music"></i> Music',
-            checked: true,
-          },
-          {
-            label: '<i class="fa fa-commenting-o"></i> SMS',
-            checked: true,
-          },
-          {
-            label: '<i class="fa fa-times"></i> Cancel',
-            checked: true,
-          },
-          {
-            label: '<i class="fa fa-file"></i> File',
-            checked: true,
-          },
-          {
-            label: '<i class="fa fa-bold"></i> Bold',
-            checked: true,
-          },
-          {
-            label: '<i class="fa fa-map-marker"></i> Location',
-            checked: true,
-          },
-          {
-            label: '<i class="fa fa-camera"></i> Camera',
-            checked: true,
-          },
-        ],
-        bool: [
-          {
-            label: "True",
-            checked: true,
-          },
-          {
-            label: "False",
-            checked: false,
-          },
-        ],
-      };
+    toggleEdit(item) {
+      if (item.editable) {
+        this.saveChanges()
+      } else {
+        this.rows.forEach(row => {
+          if (row !== item) {
+            row.editable = false
+          }
+        })
+        item.editable = true
+      }
     },
-  };
-  </script>
-  
+    saveChanges() {
+      this.rows.forEach(row => {
+        row.editable = false
+      })
+    },
+    formatDate(date) {
+      const options = { year: 'numeric', month: 'numeric', day: 'numeric' }
+      return new Date(date).toLocaleDateString('es-ES', options)
+    }
+  },
+  data() {
+    return {
+      columns: [
+        { label: 'ID', key: 'id', class: 'text-left' },
+        { label: 'Código', key: 'codigo', class: 'text-left' },
+        { label: 'Nombre Genérico', key: 'nombre_generico', class: 'text-left' },
+        { label: 'Nombre Comercial', key: 'nombre_comercial', class: 'text-left' },
+        { label: 'Tipo de Presentación', key: 'tipo_presentacion', class: 'text-left' },
+        { label: 'Vía de Administración', key: 'via_administracion', class: 'text-left' },
+        { label: 'Cantidad', key: 'cantidad', class: 'text-left' },
+        { label: 'Precio Costo', key: 'precio_costo', class: 'text-left' },
+        { label: 'Precio Venta', key: 'precio_venta', class: 'text-left' },
+        { label: 'Número de Lote', key: 'numero_lote', class: 'text-left' },
+        { label: 'Fecha de Solicitud', key: 'fecha_solicitud', class: 'text-left' }, // Agregamos la fecha de solicitud
+        { label: 'Fecha de Entrega', key: 'fecha_entrega', class: 'text-left' },
+        { label: 'Fecha de Caducidad', key: 'fecha_caducidad', class: 'text-left' },
+        { label: 'Descripción', key: 'descripcion', class: 'text-left' }, // Nuevo campo de Descripción
+        { label: 'Acciones', key: 'acciones', class: 'text-center' }
+      ],
+
+      rows: [
+        {
+          id: 1,
+          codigo: 'MED001',
+          nombre_generico: 'Paracetamol',
+          nombre_comercial: 'Panadol',
+          tipo_presentacion: 'Tableta',
+          via_administracion: 'Oral',
+          cantidad: 100,
+          precio_costo: 10,
+          precio_venta: 15,
+          numero_lote: 'LOTE001',
+          fecha_solicitud: new Date(2024, 3, 20), // Ejemplo de fecha de solicitud
+          fecha_entrega: new Date(2024, 3, 25), // Ejemplo de fecha de entrega
+          fecha_caducidad: new Date(2025, 3, 17),
+          descripcion: 'Descripción del medicamento',
+          editable: false
+        },
+        // Otros elementos del inventario
+      ]
+
+    }
+  }
+}
+</script>
+
+<style scoped>
+/* Estilos CSS si es necesario */
+</style>

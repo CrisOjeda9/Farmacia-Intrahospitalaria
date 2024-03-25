@@ -94,7 +94,6 @@ import VerticalWizard from '../views/FormWizard/VerticalWizard.vue'
 
 import FarmaciaI from '../views/FarmaciaIntraHospitalaria/farmaciaintrahospitalaria.vue'
 import FarmaciaII from '../views/FarmaciaIntraHospitalaria/farmaciainventario.vue'
-import FarmaciaIII from '../views/FarmaciaIntraHospitalaria/nuevomedicamento.vue'
 import FarmaciaIIII from '../views/FarmaciaIntraHospitalaria/dashboard.vue'
 import FarmaciaIIIII from '../views/FarmaciaIntraHospitalaria/dispensaciondetalles.vue'
 
@@ -133,12 +132,6 @@ const childRoutes = (prop, mode) => [
     name: prop + '.farmintraInv',
     meta: { dark: mode, auth: true, name: 'Farmacia Intrahospitalaria' },
     component: FarmaciaII
-  },
-  {
-    path: 'nuevoMed',
-    name: prop + '.nuevoMEd',
-    meta: { dark: mode, auth: true, name: 'Farmacia Intrahospitalaria' },
-    component: FarmaciaIII
   },
   {
     path: 'farmadash',
