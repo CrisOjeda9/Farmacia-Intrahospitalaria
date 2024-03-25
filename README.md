@@ -1,5 +1,5 @@
 # Farmacia-Intrahospitalaria
-Repositorio del modulo de farmacia
+Repositorio del modulo de farmacia Intrahospitalaria 
 
 ------------
 ![logoCMD](https://github.com/CrisOjeda9/Farmacia-Intrahospitalaria/assets/161864911/7470cf19-54db-420b-bb88-bff501cbc681)
@@ -214,7 +214,8 @@ buscan atención médica de calidad y compasión en su comunidad.
 
 ### Modelo Relacional
 
-![de](https://github.com/CrisOjeda9/Farmacia-Intrahospitalaria/assets/161864911/630edfd7-8573-4315-a236-ef5342534530)
+![ModeloBD](https://github.com/CrisOjeda9/Farmacia-Intrahospitalaria/assets/161864911/143b3414-4ff9-492e-8b7c-88e4b87c1a79)
+
 
 
 
