@@ -87,9 +87,11 @@
 </template>
 
 <script>
+import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { xray } from '../../config/pluginInit'
 import iqCard from '../../components/xray/cards/iq-card'
+import axios from 'axios' // Importa Axios si no lo has hecho ya
 
 export default {
   name: 'InventarioMedicamentos',
@@ -101,84 +103,94 @@ export default {
       router.push('/nuevoMed')
     }
 
-    return { redirectToNewMedicine }
-  },
-  mounted() {
-    xray.index()
-  },
-  methods: {
-    remove(item) {
-      let index = this.rows.indexOf(item)
-      this.rows.splice(index, 1)
-    },
-    toggleEdit(item) {
+    const columns = [
+      { label: 'ID', key: 'id', class: 'text-left' },
+      { label: 'Código', key: 'codigo', class: 'text-left' },
+      { label: 'Nombre Genérico', key: 'nombre_generico', class: 'text-left' },
+      { label: 'Nombre Comercial', key: 'nombre_comercial', class: 'text-left' },
+      { label: 'Tipo de Presentación', key: 'tipo_presentacion', class: 'text-left' },
+      { label: 'Vía de Administración', key: 'via_administracion', class: 'text-left' },
+      { label: 'Cantidad', key: 'cantidad', class: 'text-left' },
+      { label: 'Precio Costo', key: 'precio_costo', class: 'text-left' },
+      { label: 'Precio Venta', key: 'precio_venta', class: 'text-left' },
+      { label: 'Número de Lote', key: 'numero_lote', class: 'text-left' },
+      { label: 'Fecha de Solicitud', key: 'fecha_solicitud', class: 'text-left' }, // Agregamos la fecha de solicitud
+      { label: 'Fecha de Entrega', key: 'fecha_entrega', class: 'text-left' },
+      { label: 'Fecha de Caducidad', key: 'fecha_caducidad', class: 'text-left' },
+      { label: 'Descripción', key: 'descripcion', class: 'text-left' }, // Nuevo campo de Descripción
+      { label: 'Acciones', key: 'acciones', class: 'text-center' }
+    ]
+
+    const rows = ref([])
+
+    const fetchData = async () => {
+      try {
+        const response = await axios.get('http://127.0.0.1:8000/hospital/api/v1c_lotes_medicamentos/')
+        rows.value = response.data.map(item => ({
+          id: item.id,
+          codigo: item.codigo,
+          nombre_generico: item.nombre_generico,
+          nombre_comercial: item.nombre_comercial,
+          tipo_presentacion: item.tipo_presentacion,
+          via_administracion: item.via_administracion,
+          cantidad: item.Cantidad,
+          precio_costo: item.Precio_unitario, // Asegúrate de usar el campo correcto de la API
+          precio_venta: item.precio_venta, // Asegúrate de usar el campo correcto de la API
+          numero_lote: item.numero_lote,
+          fecha_solicitud: item.Fecha_solicitud,
+          fecha_entrega: item.fecha_entrega,
+          fecha_caducidad: item.fecha_caducidad,
+          descripcion: item.Descripcion, // Asegúrate de usar el campo correcto de la API
+          editable: false
+        }))
+      } catch (error) {
+        console.error('Error fetching data:', error)
+      }
+    }
+
+    fetchData()
+
+    const remove = (item) => {
+      let index = rows.value.indexOf(item)
+      rows.value.splice(index, 1)
+    }
+
+    const toggleEdit = (item) => {
       if (item.editable) {
-        this.saveChanges()
+        saveChanges()
       } else {
-        this.rows.forEach(row => {
+        rows.value.forEach(row => {
           if (row !== item) {
             row.editable = false
           }
         })
         item.editable = true
       }
-    },
-    saveChanges() {
-      this.rows.forEach(row => {
+    }
+
+    const saveChanges = () => {
+      rows.value.forEach(row => {
         row.editable = false
       })
-    },
-    formatDate(date) {
+    }
+
+    const formatDate = (date) => {
       const options = { year: 'numeric', month: 'numeric', day: 'numeric' }
       return new Date(date).toLocaleDateString('es-ES', options)
     }
+
+    return { redirectToNewMedicine, columns, rows, remove, toggleEdit, saveChanges, formatDate }
+  },
+  mounted() {
+    xray.index()
+  },
+  methods: {
+    // Si hubiera algún método adicional, agrégalo aquí
   },
   data() {
     return {
-      columns: [
-        { label: 'ID', key: 'id', class: 'text-left' },
-        { label: 'Código', key: 'codigo', class: 'text-left' },
-        { label: 'Nombre Genérico', key: 'nombre_generico', class: 'text-left' },
-        { label: 'Nombre Comercial', key: 'nombre_comercial', class: 'text-left' },
-        { label: 'Tipo de Presentación', key: 'tipo_presentacion', class: 'text-left' },
-        { label: 'Vía de Administración', key: 'via_administracion', class: 'text-left' },
-        { label: 'Cantidad', key: 'cantidad', class: 'text-left' },
-        { label: 'Precio Costo', key: 'precio_costo', class: 'text-left' },
-        { label: 'Precio Venta', key: 'precio_venta', class: 'text-left' },
-        { label: 'Número de Lote', key: 'numero_lote', class: 'text-left' },
-        { label: 'Fecha de Solicitud', key: 'fecha_solicitud', class: 'text-left' }, // Agregamos la fecha de solicitud
-        { label: 'Fecha de Entrega', key: 'fecha_entrega', class: 'text-left' },
-        { label: 'Fecha de Caducidad', key: 'fecha_caducidad', class: 'text-left' },
-        { label: 'Descripción', key: 'descripcion', class: 'text-left' }, // Nuevo campo de Descripción
-        { label: 'Acciones', key: 'acciones', class: 'text-center' }
-      ],
-
-      rows: [
-        {
-          id: 1,
-          codigo: 'MED001',
-          nombre_generico: 'Paracetamol',
-          nombre_comercial: 'Panadol',
-          tipo_presentacion: 'Tableta',
-          via_administracion: 'Oral',
-          cantidad: 100,
-          precio_costo: 10,
-          precio_venta: 15,
-          numero_lote: 'LOTE001',
-          fecha_solicitud: new Date(2024, 3, 20), // Ejemplo de fecha de solicitud
-          fecha_entrega: new Date(2024, 3, 25), // Ejemplo de fecha de entrega
-          fecha_caducidad: new Date(2025, 3, 17),
-          descripcion: 'Descripción del medicamento',
-          editable: false
-        },
-        // Otros elementos del inventario
-      ]
-
+      // Si hubiera alguna data adicional, agrégala aquí
     }
   }
 }
 </script>
-
-<style scoped>
-/* Estilos CSS si es necesario */
-</style>
