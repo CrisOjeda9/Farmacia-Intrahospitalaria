@@ -29,39 +29,37 @@
                   <template v-slot:cell(via_administracion)="data">
                     <span>{{ data.item.via_administracion }}</span>
                   </template>
+                  <template v-slot:cell(marca)="data">
+                    <span>{{ data.item.marca }}</span>
+                  </template>
                   <template v-slot:cell(cantidad)="data">
-                    <span v-if="!data.item.editable">{{ data.item.cantidad }}</span>
-                    <input v-else type="number" v-model="data.item.cantidad" class="form-control" ref="editableInput">
+                    <span>{{ data.item.cantidad }}</span>
                   </template>
+
                   <template v-slot:cell(precio_costo)="data">
-                    <span v-if="!data.item.editable">{{ data.item.precio_costo }}</span>
-                    <input v-else type="number" v-model="data.item.precio_costo" class="form-control"
-                      ref="editableInput">
+                    <span>{{ data.item.precio_costo }}</span>
                   </template>
+
                   <template v-slot:cell(precio_venta)="data">
-                    <span v-if="!data.item.editable">{{ data.item.precio_venta }}</span>
-                    <input v-else type="number" v-model="data.item.precio_venta" class="form-control"
-                      ref="editableInput">
+                    <span>{{ data.item.precio_venta }}</span>
                   </template>
+
                   <template v-slot:cell(numero_lote)="data">
-                    <span v-if="!data.item.editable">{{ data.item.numero_lote }}</span>
-                    <input v-else v-model="data.item.numero_lote" class="form-control" ref="editableInput">
+                    <span>{{ data.item.numero_lote }}</span>
                   </template>
-                  <template v-slot:cell(fecha_solicitud)="data"> <!-- Ajuste aquí -->
-                    <span v-if="!data.item.editable">{{ formatDate(data.item.fecha_solicitud) }}</span>
-                    <input v-else type="date" v-model="data.item.fecha_solicitud" class="form-control"
-                      ref="editableInput">
+
+                  <template v-slot:cell(fecha_solicitud)="data">
+                    <span>{{ formatDate(data.item.fecha_solicitud) }}</span>
                   </template>
-                  <template v-slot:cell(fecha_entrega)="data"> <!-- Ajuste aquí -->
-                    <span v-if="!data.item.editable">{{ formatDate(data.item.fecha_entrega) }}</span>
-                    <input v-else type="date" v-model="data.item.fecha_entrega" class="form-control"
-                      ref="editableInput">
+
+                  <template v-slot:cell(fecha_entrega)="data">
+                    <span>{{ formatDate(data.item.fecha_entrega) }}</span>
                   </template>
+
                   <template v-slot:cell(fecha_caducidad)="data">
-                    <span v-if="!data.item.editable">{{ formatDate(data.item.fecha_caducidad) }}</span>
-                    <input v-else type="date" v-model="data.item.fecha_caducidad" class="form-control"
-                      ref="editableInput">
+                    <span>{{ formatDate(data.item.fecha_caducidad) }}</span>
                   </template>
+
                   <template v-slot:cell(descripcion)="data"> <!-- Ajuste aquí -->
                     <span>{{ data.item.descripcion }}</span>
                   </template>
@@ -70,9 +68,7 @@
                       <b-button variant="link" size="sm" @click="remove(data.item)">
                         <i class="ri-delete-bin-line text-danger"></i>
                       </b-button>
-                      <b-button variant="link" size="sm" @click="toggleEdit(data.item)">
-                        <i class="ri-edit-line text-primary"></i>
-                      </b-button>
+
                     </div>
                   </template>
                 </b-table>
@@ -110,6 +106,7 @@ export default {
       { label: 'Nombre Comercial', key: 'nombre_comercial', class: 'text-left' },
       { label: 'Tipo de Presentación', key: 'tipo_presentacion', class: 'text-left' },
       { label: 'Vía de Administración', key: 'via_administracion', class: 'text-left' },
+      { label: 'Marca', key: 'marca', class: 'text-left' },
       { label: 'Cantidad', key: 'cantidad', class: 'text-left' },
       { label: 'Precio Costo', key: 'precio_costo', class: 'text-left' },
       { label: 'Precio Venta', key: 'precio_venta', class: 'text-left' },
@@ -124,79 +121,63 @@ export default {
     const rows = ref([])
 
     const fetchData = async () => {
-  try {
-    const response1 = await axios.get('http://127.0.0.1:8000/hospital/api/v1c_lotes_medicamentos/')
-    const response2 = await axios.get('http://127.0.0.1:8000/hospital/api/v1c_detalle_lotes/')
+      try {
+        const response1 = await axios.get('http://127.0.0.1:8000/hospital/api/v1c_lotes_medicamentos/')
+        const response2 = await axios.get('http://127.0.0.1:8000/hospital/api/v1c_detalle_lotes/')
 
-    // Mapear los datos de la primera API
-    const data1 = response1.data.map(item => ({
-      id: item.id,
-      cantidad: item.Cantidad,
-      precio_costo: item.Precio_unitario,
-      fecha_solicitud: item.Fecha_solicitud,
-      descripcion: item.Descripcion, 
-      fecha_entrega: item.Fecha_ingreso,
-    }))
+        // Mapear los datos de la primera API
+        const data1 = response1.data.map(item => ({
+          id: item.id,
+          cantidad: item.Cantidad,
+          precio_costo: item.Precio_unitario,
+          fecha_solicitud: item.Fecha_solicitud,
+          descripcion: item.Descripcion,
+          fecha_entrega: item.Fecha_ingreso,
+        }))
 
-    // Mapear los datos de la segunda API
-    const data2 = response2.data.map(item => ({
-      id: item.id,
-      codigo: item.Codigo,
-      nombre_generico: item.Medicamento_ID,
-      nombre_comercial: item.Medicamento_ID,
-      tipo_presentacion: item.Medicamento_ID,
-      via_administracion: item.Medicamento_ID,
-      precio_venta: item.Precio_unitario,
-      numero_lote: item.Lotes_ID,
-      fecha_caducidad: item.fecha_vencimiento,
-      editable: false
-    }))
+        // Mapear los datos de la segunda API
+        const data2 = response2.data.map(item => ({
+          id: item.id,
+          codigo: item.Codigo,
+          nombre_generico: item.Medicamento_ID,
+          nombre_comercial: item.Medicamento_ID,
+          tipo_presentacion: item.Medicamento_ID,
+          via_administracion: item.Medicamento_ID,
+          marca: item.Marca,
+          precio_venta: item.Precio_unitario,
+          numero_lote: item.Lotes_ID,
+          fecha_caducidad: item.fecha_vencimiento,
+          editable: false
+        }))
 
-    // Combina los datos de ambas API
-    const combinedData = data1.map(item1 => {
-      const correspondingItem = data2.find(item2 => item1.id === item2.id)
-      return correspondingItem ? { ...item1, ...correspondingItem } : item1
-    })
+        // Combina los datos de ambas API
+        const combinedData = data1.map(item1 => {
+          const correspondingItem = data2.find(item2 => item1.id === item2.id)
+          return correspondingItem ? { ...item1, ...correspondingItem } : item1
+        })
 
-    // Asignar el conjunto combinado de datos a rows
-    rows.value = combinedData
-  } catch (error) {
-    console.error('Error fetching data:', error)
-  }
-}
+        // Asignar el conjunto combinado de datos a rows
+        rows.value = combinedData
+      } catch (error) {
+        console.error('Error fetching data:', error)
+      }
+    }
 
-fetchData()
+    fetchData()
 
     const remove = (item) => {
       let index = rows.value.indexOf(item)
       rows.value.splice(index, 1)
     }
 
-    const toggleEdit = (item) => {
-      if (item.editable) {
-        saveChanges()
-      } else {
-        rows.value.forEach(row => {
-          if (row !== item) {
-            row.editable = false
-          }
-        })
-        item.editable = true
-      }
-    }
 
-    const saveChanges = () => {
-      rows.value.forEach(row => {
-        row.editable = false
-      })
-    }
 
     const formatDate = (date) => {
       const options = { year: 'numeric', month: 'numeric', day: 'numeric' }
       return new Date(date).toLocaleDateString('es-ES', options)
     }
 
-    return { redirectToNewMedicine, columns, rows, remove, toggleEdit, saveChanges, formatDate }
+    return { redirectToNewMedicine, columns, rows, remove, formatDate }
   },
   mounted() {
     xray.index()
