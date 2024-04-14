@@ -124,31 +124,48 @@ export default {
     const rows = ref([])
 
     const fetchData = async () => {
-      try {
-        const response = await axios.get('http://127.0.0.1:8000/hospital/api/v1c_lotes_medicamentos/')
-        rows.value = response.data.map(item => ({
-          id: item.id,
-          codigo: item.codigo,
-          nombre_generico: item.nombre_generico,
-          nombre_comercial: item.nombre_comercial,
-          tipo_presentacion: item.tipo_presentacion,
-          via_administracion: item.via_administracion,
-          cantidad: item.Cantidad,
-          precio_costo: item.Precio_unitario, // Asegúrate de usar el campo correcto de la API
-          precio_venta: item.precio_venta, // Asegúrate de usar el campo correcto de la API
-          numero_lote: item.numero_lote,
-          fecha_solicitud: item.Fecha_solicitud,
-          fecha_entrega: item.fecha_entrega,
-          fecha_caducidad: item.fecha_caducidad,
-          descripcion: item.Descripcion, // Asegúrate de usar el campo correcto de la API
-          editable: false
-        }))
-      } catch (error) {
-        console.error('Error fetching data:', error)
-      }
-    }
+  try {
+    const response1 = await axios.get('http://127.0.0.1:8000/hospital/api/v1c_lotes_medicamentos/')
+    const response2 = await axios.get('http://127.0.0.1:8000/hospital/api/v1c_detalle_lotes/')
 
-    fetchData()
+    // Mapear los datos de la primera API
+    const data1 = response1.data.map(item => ({
+      id: item.id,
+      cantidad: item.Cantidad,
+      precio_costo: item.Precio_unitario,
+      fecha_solicitud: item.Fecha_solicitud,
+      descripcion: item.Descripcion, 
+      fecha_entrega: item.Fecha_ingreso,
+    }))
+
+    // Mapear los datos de la segunda API
+    const data2 = response2.data.map(item => ({
+      id: item.id,
+      codigo: item.Codigo,
+      nombre_generico: item.Medicamento_ID,
+      nombre_comercial: item.Medicamento_ID,
+      tipo_presentacion: item.Medicamento_ID,
+      via_administracion: item.Medicamento_ID,
+      precio_venta: item.Precio_unitario,
+      numero_lote: item.Lotes_ID,
+      fecha_caducidad: item.fecha_vencimiento,
+      editable: false
+    }))
+
+    // Combina los datos de ambas API
+    const combinedData = data1.map(item1 => {
+      const correspondingItem = data2.find(item2 => item1.id === item2.id)
+      return correspondingItem ? { ...item1, ...correspondingItem } : item1
+    })
+
+    // Asignar el conjunto combinado de datos a rows
+    rows.value = combinedData
+  } catch (error) {
+    console.error('Error fetching data:', error)
+  }
+}
+
+fetchData()
 
     const remove = (item) => {
       let index = rows.value.indexOf(item)
