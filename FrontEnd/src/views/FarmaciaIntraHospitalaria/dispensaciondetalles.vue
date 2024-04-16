@@ -19,6 +19,9 @@
                   <template v-slot:cell(recetaId)="data">
                     <span>{{ data.item.recetaId }}</span>
                   </template>
+                  <template v-slot:cell(detalleRecetaId)="data">
+                    <span>{{ data.item.detalleRecetaId }}</span>
+                  </template>
                   <template v-slot:cell(nombreGenerico)="data">
                     <span>{{ data.item.nombreGenerico }}</span>
                   </template>
@@ -75,6 +78,7 @@ export default {
       { key: 'id', label: 'ID', field: 'id', headerClass: 'text-left' },
       { key: 'personalMedicoId', label: 'Personal Médico ID', field: 'personalMedicoId', headerClass: 'text-left' },
       { key: 'recetaId', label: 'Receta ID', field: 'recetaId', headerClass: 'text-left' },
+      { key: 'detalleRecetaId', label: 'Detalle Receta ID', field: 'detalleRecetaId', headerClass: 'text-left' },
       { key: 'nombreGenerico', label: 'Nombre Genérico', field: 'nombreGenerico', headerClass: 'text-left' },
       { key: 'nombreComercial', label: 'Nombre Comercial', field: 'nombreComercial', headerClass: 'text-left' },
       { key: 'viaAdministrativa', label: 'Vía Administrativa', field: 'viaAdministrativa', headerClass: 'text-left' },
@@ -95,6 +99,7 @@ export default {
 
         // Mapear los datos de la primera API
         const data1 = response1.data.map(item => ({
+          id: item.id,
           personalMedicoId : item.Personal_Medico_ID ,
           recetaId : item.Receta_ID,
           cantidadSolicitada : item.Total_Medicamentos_Solicitados,
@@ -105,7 +110,12 @@ export default {
 
         // Mapear los datos de la segunda API
         const data2 = response2.data.map(item => ({
-          id: item.Dispensacion_ID
+          id: item.Dispensacion_ID,
+          detalleRecetaId: item.Detalle_Receta_ID ,
+          cantidadEntregada: item.Cantidad_Entregada ,
+          precioUnitario:item.Precio_Unitario ,
+          fechaVenta:item.Fecha_Entrega,
+          importe: item.Precio_Total 
         }))
 
         // Combina los datos de ambas API
