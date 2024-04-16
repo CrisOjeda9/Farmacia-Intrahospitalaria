@@ -16,15 +16,7 @@
         </div>
       </div>
       <nav class="navbar navbar-expand-lg navbar-light p-0">
-        <div class="iq-search-bar">
-          <form action="#" class="searchbox">
-            <input type="text" class="text search-input" placeholder="Type here to search..." />
-            <a class="search-link" href="#"><i class="ri-search-line"></i></a>
-          </form>
-        </div>
-        <b-navbar-toggle target="nav">
-          <i class="ri-menu-3-line"></i>
-        </b-navbar-toggle>
+       
         <div class="iq-menu-bt align-self-center">
           <div class="wrapper-menu" @click="miniSidebar">
             <div class="main-circle"><i class="ri-more-fill"></i></div>
@@ -62,7 +54,6 @@ export default {
   data() {
     return {
       sidebar: SideBarItems,
-      globalSearch: '',
       showSearch: false,
       showMenu: false
     }
