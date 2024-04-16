@@ -119,7 +119,15 @@ export default {
     ]
 
     const rows = ref([])
-
+    const fetchMedicamento = async (codigo) => {
+      try {
+        const response = await axios.get(`http://127.0.0.1:8000/hospital/api/v1medicamentos/${codigo}`);
+        return response.data;
+      } catch (error) {
+        console.error('Error fetching medicamento:', error);
+        return null;
+      }
+    };
     const fetchData = async () => {
       try {
         const response1 = await axios.get('http://127.0.0.1:8000/hospital/api/v1c_lotes_medicamentos/')
@@ -155,7 +163,16 @@ export default {
           const correspondingItem = data2.find(item2 => item1.id === item2.id)
           return correspondingItem ? { ...item1, ...correspondingItem } : item1
         })
-
+        // Obtener detalles del medicamento para cada elemento
+        for (const item of combinedData) {
+          const medicamentoDetails = await fetchMedicamento(item.codigo);
+          if (medicamentoDetails) {
+            item.nombre_generico = medicamentoDetails.Nombre_Generico;
+            item.nombre_comercial = medicamentoDetails.Nombre_Comercial;
+            item.via_administracion = medicamentoDetails.Via_Administracion;
+            item.tipo_presentacion = medicamentoDetails.Presentacion;
+          }
+        }
         // Asignar el conjunto combinado de datos a rows
         rows.value = combinedData
       } catch (error) {
