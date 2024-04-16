@@ -733,6 +733,11 @@ export default {
         return total + (item.CANTIDAD * item.PRECIO);
       }, 0).toFixed(2);
     }
+  },
+  watch: {
+    selectedOption: function(){
+      this.changeTab(1)
+    }
   }
 }
 

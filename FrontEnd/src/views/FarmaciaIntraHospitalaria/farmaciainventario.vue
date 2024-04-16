@@ -44,9 +44,7 @@
                     <span>{{ data.item.precio_venta }}</span>
                   </template>
 
-                  <template v-slot:cell(numero_lote)="data">
-                    <span>{{ data.item.numero_lote }}</span>
-                  </template>
+              
 
                   <template v-slot:cell(fecha_solicitud)="data">
                     <span>{{ formatDate(data.item.fecha_solicitud) }}</span>
@@ -110,7 +108,6 @@ export default {
       { label: 'Cantidad', key: 'cantidad', class: 'text-left' },
       { label: 'Precio Costo', key: 'precio_costo', class: 'text-left' },
       { label: 'Precio Venta', key: 'precio_venta', class: 'text-left' },
-      { label: 'Número de Lote', key: 'numero_lote', class: 'text-left' },
       { label: 'Fecha de Solicitud', key: 'fecha_solicitud', class: 'text-left' }, // Agregamos la fecha de solicitud
       { label: 'Fecha de Entrega', key: 'fecha_entrega', class: 'text-left' },
       { label: 'Fecha de Caducidad', key: 'fecha_caducidad', class: 'text-left' },
@@ -130,30 +127,30 @@ export default {
     };
     const fetchData = async () => {
       try {
-        const response1 = await axios.get('http://127.0.0.1:8000/hospital/api/v1c_lotes_medicamentos/')
-        const response2 = await axios.get('http://127.0.0.1:8000/hospital/api/v1c_detalle_lotes/')
+        const response1 = await axios.get('http://127.0.0.1:8000/hospital/api/v1lotes_medicamentos/')
+        const response2 = await axios.get('http://127.0.0.1:8000/hospital/api/v1detalle_lotes/')
 
         // Mapear los datos de la primera API
         const data1 = response1.data.map(item => ({
           id: item.id,
-          cantidad: item.Cantidad,
-          precio_costo: item.Precio_unitario,
-          fecha_solicitud: item.Fecha_solicitud,
-          descripcion: item.Descripcion,
-          fecha_entrega: item.Fecha_ingreso,
+          cantidad: item.cantidad,
+          precio_costo: item.precio_unitario,
+          fecha_solicitud: item.fecha_solicitud,
+          descripcion: item.descripcion,
+          fecha_entrega: item.fecha_ingreso,
         }))
 
         // Mapear los datos de la segunda API
         const data2 = response2.data.map(item => ({
-          id: item.id,
-          codigo: item.Codigo,
-          nombre_generico: item.Medicamento_ID,
-          nombre_comercial: item.Medicamento_ID,
-          tipo_presentacion: item.Medicamento_ID,
-          via_administracion: item.Medicamento_ID,
-          marca: item.Marca,
-          precio_venta: item.Precio_unitario,
-          numero_lote: item.Lotes_ID,
+          id: item.lotes,
+          codigo: item.codigo,
+          nombre_generico: item.medicamento,
+          nombre_comercial: item.medicamento,
+          tipo_presentacion: item.medicamento,
+          via_administracion: item.medicamento,
+          marca: item.marca,
+          fecha_vencimiento: item.fecha_vencimiento,
+          precio_venta: item.precio_unitario,
           fecha_caducidad: item.fecha_vencimiento,
           editable: false
         }))
@@ -166,11 +163,12 @@ export default {
         // Obtener detalles del medicamento para cada elemento
         for (const item of combinedData) {
           const medicamentoDetails = await fetchMedicamento(item.id);
+          
           if (medicamentoDetails) {
-            item.nombre_generico = medicamentoDetails.Nombre_Generico;
-            item.nombre_comercial = medicamentoDetails.Nombre_Comercial;
-            item.via_administracion = medicamentoDetails.Via_Administracion;
-            item.tipo_presentacion = medicamentoDetails.Presentacion;
+            item.nombre_generico = medicamentoDetails.nombre_generico;
+            item.nombre_comercial = medicamentoDetails.nombre_comercial;
+            item.via_administracion = medicamentoDetails.via_administracion;
+            item.tipo_presentacion = medicamentoDetails.presentacion;
           }
         }
         // Asignar el conjunto combinado de datos a rows
