@@ -119,9 +119,9 @@ export default {
     ]
 
     const rows = ref([])
-    const fetchMedicamento = async (codigo) => {
+    const fetchMedicamento = async (id) => {
       try {
-        const response = await axios.get(`http://127.0.0.1:8000/hospital/api/v1medicamentos/${codigo}`);
+        const response = await axios.get(`http://127.0.0.1:8000/hospital/api/v1medicamentos/${id}`);
         return response.data;
       } catch (error) {
         console.error('Error fetching medicamento:', error);
@@ -165,7 +165,7 @@ export default {
         })
         // Obtener detalles del medicamento para cada elemento
         for (const item of combinedData) {
-          const medicamentoDetails = await fetchMedicamento(item.codigo);
+          const medicamentoDetails = await fetchMedicamento(item.id);
           if (medicamentoDetails) {
             item.nombre_generico = medicamentoDetails.Nombre_Generico;
             item.nombre_comercial = medicamentoDetails.Nombre_Comercial;
