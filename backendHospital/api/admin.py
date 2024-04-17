@@ -1,8 +1,18 @@
 from django.contrib import admin
-from .models import c_dispensacion_medicamentos,c_detalles_dispensacion, c_lotes_medicamentos,c_detalles_lotes
-# Register your models here.
+from .models import AreasMedicas, Bitacora, Citas, Departamentos, DetalleDispensacionRelacion, DetalleLotes, DetallesDispensacion, DispensacionMedicamentos, LotesMedicamentos, Medicamentos, Pacientes, PersonalMedico, Personas, RecetaMedica, RecetaMedicaDetalle
 
-admin.site.register(c_dispensacion_medicamentos)
-admin.site.register(c_detalles_dispensacion)
-admin.site.register(c_lotes_medicamentos)
-admin.site.register(c_detalles_lotes)
+admin.site.register(AreasMedicas)
+admin.site.register(Bitacora)
+admin.site.register(Citas)
+admin.site.register(Departamentos)
+admin.site.register(DetalleDispensacionRelacion)
+admin.site.register(DetalleLotes)
+admin.site.register(DetallesDispensacion)
+admin.site.register(DispensacionMedicamentos)
+admin.site.register(LotesMedicamentos)
+admin.site.register(Medicamentos)
+admin.site.register(Pacientes)
+admin.site.register(PersonalMedico)
+admin.site.register(Personas)
+admin.site.register(RecetaMedica)
+admin.site.register(RecetaMedicaDetalle)
