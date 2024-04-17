@@ -37,3 +37,4 @@ select*from detalle_lotes;
 select fn_calcular_cantidad_por_unidad (4);
 
 
+SELECT calcular_precio_venta_por_id(1) AS Precio_de_Venta;
