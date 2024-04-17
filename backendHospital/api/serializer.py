@@ -1,24 +1,77 @@
 from rest_framework import serializers
-from .models import  c_dispensacion_medicamentos,c_detalles_dispensacion, c_lotes_medicamentos,c_detalles_lotes
-  
-#Modelo de farmacia  
+from .models import AreasMedicas, Bitacora, Citas, Departamentos, DetalleDispensacionRelacion, DetalleLotes, DetallesDispensacion, DispensacionMedicamentos, LotesMedicamentos, Medicamentos, Pacientes, PersonalMedico, Personas, RecetaMedica, RecetaMedicaDetalle
 
-class c_dispensacionSerializer(serializers.ModelSerializer):  
+class AreasMedicasSerializer(serializers.ModelSerializer):
     class Meta:
-        model = c_dispensacion_medicamentos
+        model = AreasMedicas
         fields = '__all__'
-class c_detalles_dispensacionSerializer(serializers.ModelSerializer):  
+
+class BitacoraSerializer(serializers.ModelSerializer):
     class Meta:
-        model = c_detalles_dispensacion
+        model = Bitacora
         fields = '__all__'
-  
-class c_lotesSerializer(serializers.ModelSerializer): 
+
+class CitasSerializer(serializers.ModelSerializer):
     class Meta:
-        model = c_lotes_medicamentos
+        model = Citas
         fields = '__all__'
-        
-class c_detalles_lotesSerializer(serializers.ModelSerializer): 
+
+class DepartamentosSerializer(serializers.ModelSerializer):
     class Meta:
-        model = c_detalles_lotes
+        model = Departamentos
         fields = '__all__'
- 
+
+class DetalleDispensacionRelacionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DetalleDispensacionRelacion
+        fields = '__all__'
+
+class DetalleLotesSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DetalleLotes
+        fields = '__all__'
+
+class DetallesDispensacionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DetallesDispensacion
+        fields = '__all__'
+
+class DispensacionMedicamentosSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DispensacionMedicamentos
+        fields = '__all__'
+
+class LotesMedicamentosSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = LotesMedicamentos
+        fields = '__all__'
+
+class MedicamentosSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Medicamentos
+        fields = '__all__'
+
+class PacientesSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Pacientes
+        fields = '__all__'
+
+class PersonalMedicoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PersonalMedico
+        fields = '__all__'
+
+class PersonasSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Personas
+        fields = '__all__'
+
+class RecetaMedicaSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = RecetaMedica
+        fields = '__all__'
+
+class RecetaMedicaDetalleSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = RecetaMedicaDetalle
+        fields = '__all__'
