@@ -1,221 +1,178 @@
 <template>
-    <div>
-      <!-- Card 1 -->
-      <b-row>
-        <b-col sm="6">
-          <b-card title="Dispensacion de Recetas" class="iq-mb-3">
-            <b-card-text>It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.</b-card-text>
-            <b-button href="farmintra" block variant="btn btn-primary w-100" @click="handleCardButtonClick">Ir</b-button>
-          </b-card>
-        </b-col>
-        <b-col sm="6">
-          <b-card title="Control Inventario" class="iq-mb-3">
-            <b-card-text>It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.</b-card-text>
-            <b-button href="farmintraInv" block variant="btn btn-primary w-100" @click="handleCardButtonClick">Ir</b-button>
-          </b-card>
-        </b-col>
-      </b-row>
-    </div>
-    <b-container fluid>
-      <b-row>
-        <b-col lg="6" v-for="(item, index) in charts" :key="index">
-          <iq-card>
-            <template v-slot:headerTitle>
-              <h4>{{ item.title }}</h4>
-            </template>
-            <template v-slot:body>
-              <ApexChart :element="item.type" :chartOption="item.bodyData" />
-            </template>
-          </iq-card>
-        </b-col>
-      </b-row>
-    </b-container>
-  </template>
-  
-  <script>
-  import { xray } from '../../config/pluginInit'
-  import iqCard from '../../components/xray/cards/iq-card'
-  import ApexChart from '../../components/xray/charts/ApexChart'
-  
-  export default {
-    name: 'ApexCharts',
-    components: { iqCard, ApexChart },
-    mounted() {
-      xray.index()
-    },
-    data() {
-      return {
-        slide: 0,
-        images: [
-          'https://via.placeholder.com/800x400/FF5733/FFFFFF',
-          'https://via.placeholder.com/800x400/33FF57/FFFFFF',
-          'https://via.placeholder.com/800x400/5733FF/FFFFFF',
-          // Agrega más URLs de imágenes aquí según sea necesario
-        ],
-              charts: [
+  <div>
+    <!-- Card 1 -->
+    <b-row>
+      <b-col sm="6">
+        <b-card title="Dispensación de Recetas" class="iq-mb-3">
+          <b-card-text>Es un hecho establecido de hace mucho tiempo que un lector se distraerá con el contenido legible de una página cuando mire su diseño.</b-card-text>
+          <b-button href="farmintra" block variant="btn btn-primary w-100" @click="handleCardButtonClick">Ir</b-button>
+        </b-card>
+      </b-col>
+      <b-col sm="6">
+        <b-card title="Control Inventario" class="iq-mb-3">
+          <b-card-text>Es un hecho establecido de hace mucho tiempo que un lector se distraerá con el contenido legible de una página cuando mire su diseño.</b-card-text>
+          <b-button href="farmintraInv" block variant="btn btn-primary w-100" @click="handleCardButtonClick">Ir</b-button>
+        </b-card>
+      </b-col>
+    </b-row>
+  </div>
+  <b-container fluid>
+    <b-row>
+      <b-col lg="6">
+        <iq-card>
+          <template v-slot:headerTitle>
+            <h4>{{ chartTitle }}</h4>
+          </template>
+          <template v-slot:body>
+            <ApexChart :element="chartType" :chartOption="chartOptions" />
+          </template>
+        </iq-card>
+      </b-col>
+      <!-- Nueva tabla para los medicamentos más solicitados -->
+      <b-col lg="6">
+        <iq-card>
+          <template v-slot:headerTitle>
+            <h4>Medicamentos más solicitados</h4>
+          </template>
+          <template v-slot:body>
+            <canvas id="medChart" width="400" height="350"></canvas>
+          </template>
+        </iq-card>
+      </b-col>
+    </b-row>
+  </b-container>
+</template>
+
+<script>
+import { xray } from '../../config/pluginInit'
+import iqCard from '../../components/xray/cards/iq-card'
+import ApexChart from '../../components/xray/charts/ApexChart'
+import axios from 'axios'
+import Chart from 'chart.js/auto'
+
+export default {
+  name: 'ApexCharts',
+  components: { iqCard, ApexChart },
+  data() {
+    return {
+      chartTitle: 'Costos y ganancias en la compra y venta de medicamentos',
+      chartType: 'bar',
+      chartOptions: {
+        chart: {
+          height: 350,
+          type: 'bar',
+          stacked: true
+        },
+        plotOptions: {
+          bar: {
+            horizontal: false
+          }
+        },
+        dataLabels: {
+          enabled: true,
+          formatter: function (val) {
+            return '$' + val.toFixed(2);
+          },
+          offsetY: -20,
+          style: {
+            fontSize: '12px',
+            colors: ['#304758']
+          }
+        },
+        xaxis: {
+          categories: ['Costos', 'Ganancias']
+        },
+        series: [
           {
-            title: 'Corte de Caja',
-            type: 'line',
-            bodyData: {
-              chart: {
-                height: 350,
-                type: 'line',
-                zoom: {
-                  enabled: false
-                }
-              },
-              series: [
-                {
-                  name: 'Desktops',
-                  data: [10, 41, 35, 51, 49, 62, 69, 91, 148]
-                }
-              ],
-              dataLabels: {
-                enabled: false
-              },
-              stroke: {
-                curve: 'straight'
-              },
-              title: {
-                text: 'Product Trends by Month',
-                align: 'left'
-              },
-              grid: {
-                row: {
-                  colors: ['#f3f3f3', 'transparent'], // takes an array which will be repeated on columns
-                  opacity: 0.5
-                }
-              },
-              xaxis: {
-                categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep']
-              }
-            }
+            name: 'Costos',
+            data: []
           },
           {
-            title: 'Line Area Chart',
-            type: 'line-area',
-            bodyData: {
-              chart: {
-                height: 350,
-                type: 'area'
-              },
-              dataLabels: {
-                enabled: false
-              },
-              stroke: {
-                curve: 'smooth'
-              },
-              colors: ['#089bab', '#FC9F5B'],
-              series: [
-                {
-                  name: 'series1',
-                  data: [31, 40, 28, 51, 42, 109, 100]
-                },
-                {
-                  name: 'series2',
-                  data: [11, 32, 45, 32, 34, 52, 41]
-                }
-              ],
-  
-              xaxis: {
-                type: 'datetime',
-                categories: ['2018-09-19T00:00:00', '2018-09-19T01:30:00', '2018-09-19T02:30:00', '2018-09-19T03:30:00', '2018-09-19T04:30:00', '2018-09-19T05:30:00', '2018-09-19T06:30:00']
-              },
-              tooltip: {
-                x: {
-                  format: 'dd/MM/yy HH:mm'
-                }
-              }
-            }
-          },
-          {
-            title: 'Column Chart',
-            type: 'column',
-            bodyData: {
-              chart: {
-                height: 350,
-                type: 'bar'
-              },
-              plotOptions: {
-                bar: {
-                  horizontal: false,
-                  columnWidth: '55%',
-                  endingShape: 'rounded'
-                }
-              },
-              dataLabels: {
-                enabled: false
-              },
-              stroke: {
-                show: true,
-                width: 2,
-                colors: ['transparent']
-              },
-              colors: ['#089bab', '#FC9F5B', '#e64141'],
-              series: [
-                {
-                  name: 'Net Profit',
-                  data: [44, 55, 57, 56, 61, 58]
-                },
-                {
-                  name: 'Revenue',
-                  data: [76, 85, 101, 98, 87, 105]
-                },
-                {
-                  name: 'Free Cash Flow',
-                  data: [35, 41, 36, 26, 45, 48]
-                }
-              ],
-              xaxis: {
-                categories: ['Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul']
-              },
-              yaxis: {
-                title: {
-                  text: '$ (thousands)'
-                }
-              },
-              fill: {
-                opacity: 1
-              },
-              tooltip: {
-                y: {
-                  formatter: function (val) {
-                    return '$ ' + val + ' thousands'
-                  }
-                }
-              }
-            }
-          },
-          {
-            title: 'Bar Chart',
-            type: 'bar',
-            bodyData: {
-              chart: {
-                height: 350,
-                type: 'bar'
-              },
-              plotOptions: {
-                bar: {
-                  horizontal: true
-                }
-              },
-              dataLabels: {
-                enabled: false
-              },
-              series: [
-                {
-                  data: [470, 540, 580, 690, 1100, 1200, 1380]
-                }
-              ],
-              xaxis: {
-                categories: ['Netherlands', 'Italy', 'France', 'Japan', 'United States', 'China', 'Germany']
-              }
-            }
-          },
+            name: 'Ganancias',
+            data: []
+          }
         ]
       }
     }
+  },
+  mounted() {
+    xray.index();
+    this.fetchData();
+    this.createPieChart();
+  },
+  methods: {
+    async fetchData() {
+      try {
+        // Obtener datos de la API de lotes de medicamentos
+        const responseMedicamentos = await axios.get('http://127.0.0.1:8000/hospital/api/v1lotes_medicamentos/');
+        const medicamentosData = responseMedicamentos.data;
+
+        // Calcular la suma de precios unitarios de medicamentos
+        const totalPriceMedicamentos = medicamentosData.reduce((total, medicamento) => total + parseFloat(medicamento.precio_unitario), 0);
+
+        // Obtener datos de la API de detalles de dispensación
+        const responseDispensacion = await axios.get('http://127.0.0.1:8000/hospital/api/v1detalles_dispensacion/');
+        const dispensacionData = responseDispensacion.data;
+
+        // Calcular la suma de precios totales de dispensación
+        const totalPriceDispensacion = dispensacionData.reduce((total, detalle) => total + parseFloat(detalle.precio_total), 0);
+
+        // Actualizar los datos de la gráfica
+        this.chartOptions.series[0].data = [totalPriceMedicamentos, 0]; // El segundo valor (0) es para la dispensación
+        this.chartOptions.series[1].data = [0, totalPriceDispensacion]; // El primer valor (0) es para los medicamentos
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    },
+    async createPieChart() {
+      try {
+        const responseDispensacion = await axios.get('http://127.0.0.1:8000/hospital/api/v1dispensacion_medicamentos/');
+        const dispensacionData = responseDispensacion.data;
+
+        const totalSolicitados = dispensacionData.reduce((total, item) => total + item.total_medicamentos_solicitados, 0);
+        const totalEntregados = dispensacionData.reduce((total, item) => total + item.total_medicamentos_entregados, 0);
+
+        const total = totalSolicitados + totalEntregados;
+
+        const pieData = {
+          labels: ['Solicitados', 'Entregados'],
+          datasets: [{
+            data: [totalSolicitados, totalEntregados],
+            backgroundColor: ['#FF6384', '#36A2EB']
+          }]
+        };
+
+        new Chart(document.getElementById('medChart'), {
+          type: 'pie',
+          data: pieData,
+          options: {
+            plugins: {
+              tooltip: {
+                enabled: true,
+                callbacks: {
+                  label: function(context) {
+                    var label = context.label || '';
+                    if (label) {
+                      label += ': ';
+                    }
+                    var value = context.parsed || 0;
+                    label += value + ' (' + ((value / total) * 100).toFixed(2) + '%)';
+                    return label;
+                  }
+                }
+              }
+            },
+            responsive: true,
+            maintainAspectRatio: false
+          }
+        });
+      } catch (error) {
+        console.error('Error creating pie chart:', error);
+      }
+    },
+    handleCardButtonClick() {
+      // Acción al hacer clic en el botón de la tarjeta
+    }
   }
-  </script>
-  
-  
+}
+</script>
