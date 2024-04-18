@@ -1,6 +1,6 @@
 use bd_hospital_210467;
 
-SHOW PROCEDURE STATUS WHERE Db = 'bd_hospital_farmacia';
+SHOW PROCEDURE STATUS WHERE Db = 'bd_hospital_210467';
 
 
 CALL sp_limpia_bd('farmacmd');
@@ -22,19 +22,25 @@ CALL sp_insertar_lotes(10);
 CALL sp_insertar_dispensacion_medicamentos(1,8); -- INSERTA EN DISPENSACION_MEDICAMENTOS
 -- SELECT sp_insertar_dispensacion(2); aun no funciona 
 
-CALL sp_insertar_dispensacion_medicamentos(1, 3);
+CALL sp_insertar_dispensacion_medicamentos(5);
 select*from dispensacion_medicamentos;
+
+CALL sp_insertar_detalles_dispensacion(1);
 select*from detalles_dispensacion;
 
 
-select*from lotes_medicamentos;
+
+CALL sp_insertar_lotes(10);
 select*from detalle_lotes;
+select*from lotes_medicamentos;
 
 
 
 -- SP, TRIGGERS DE LOTES, SP Y TRIGGERS DE LA TABLA DISPENSACION_MEDICAMENTOS
 
-select fn_calcular_cantidad_por_unidad (4);
+select fn_calcular_cantidad_por_unidad (1);
 
 
-SELECT calcular_precio_venta_por_id(1) AS Precio_de_Venta;
+SELECT calcular_precio_venta_por_lote(3) AS Precio_de_Venta;
+
+
