@@ -24,3 +24,5 @@ urlpatterns = [
     path('hospital/', include('api.urls')),
     path('docs/', include_docs_urls(title="hospital API'S")),
 ]
+
+
