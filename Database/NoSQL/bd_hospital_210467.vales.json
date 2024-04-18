@@ -1,0 +1,26 @@
+[{
+  "_id": {
+    "$oid": "6620e069baf52627f6558d2f"
+  },
+  "Numero_de_vale": "001",
+  "Fecha_de_emision": {
+    "$date": "2024-04-18T00:00:00.000Z"
+  },
+  "Paciente": "Juan Perez",
+  "Medico_que_prescribe": "Dr. Garcia",
+  "Medicamentos_recetados": [
+    "Paracetamol",
+    "Amoxicilina"
+  ],
+  "Cantidad_de_medicamentos": [
+    10,
+    20
+  ],
+  "Fecha_de_caducidad_del_vale": {
+    "$date": "2024-05-18T00:00:00.000Z"
+  },
+  "Estado_del_vale": "Activo",
+  "Cantidad_utilizada": 0,
+  "Fecha_de_uso": null,
+  "Comentarios": "Tomar después de las comidas"
+}]

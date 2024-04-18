@@ -1,0 +1,15 @@
+[{
+  "_id": {
+    "$oid": "6620e177baf52627f6558d30"
+  },
+  "Numero_de_devolucion": "001",
+  "Fecha_de_devolucion": {
+    "$date": "2024-04-18T00:00:00.000Z"
+  },
+  "Producto_devuelto": "Producto A",
+  "Cantidad_devuelta": 2,
+  "Motivo_de_devolucion": "Producto dañado",
+  "Numero_de_factura_original": "FAC-123",
+  "Estado_de_devolucion": "En proceso",
+  "Comentarios": "Necesita ser inspeccionado"
+}]
