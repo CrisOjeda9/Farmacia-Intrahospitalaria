@@ -146,7 +146,7 @@
                                   {{ calcularEstado(data.item) }}
                                 </template>
                               </b-table>
-                              
+
                             </div>
                             <!-- Ventana fija para mostrar el total -->
                             <div class="fixed-bottom bg-light p-3">
@@ -242,8 +242,7 @@
                               <b-row>
                                 <b-col md="6">
                                   <b-form-group label="Personal Médico ID *">
-                                    <b-form-select v-model="personalMedicoId" :options="optionsPersonal"
-                                      :rules="isRequire"
+                                    <b-form-select v-model="personalMedicoId" :options="cedulaMedica" :rules="isRequire"
                                       :class="{ 'is-invalid': errors.personalMedicoId }"></b-form-select>
                                     <div class="invalid-feedback">
                                       <span>{{ errors.personalMedicoId }}</span>
@@ -262,30 +261,52 @@
                           <fieldset>
                             <div class="form-card text-start">
                               <h3 class="mb-4">Detalles del Personal Medico:</h3>
-                              <b-row v-if="pedidosHospital">
+                              <b-row v-if="medicoDetalles">
                                 <b-col md="6">
                                   <b-form-group label="Departamento ID:">
-                                    <b-form-input v-model="pedidosHospital.Departamento_ID" readonly></b-form-input>
+                                    <b-form-input v-model="medicoDetalles.persona" readonly></b-form-input>
                                   </b-form-group>
                                 </b-col>
                                 <b-col md="6">
                                   <b-form-group label="Especialidad:">
-                                    <b-form-input v-model="pedidosHospital.Especialidad" readonly></b-form-input>
+                                    <b-form-input v-model="medicoDetalles.especialidad" readonly></b-form-input>
                                   </b-form-group>
                                 </b-col>
                                 <b-col md="6">
                                   <b-form-group label="Tipo:">
-                                    <b-form-input v-model="pedidosHospital.Tipo" readonly></b-form-input>
+                                    <b-form-input v-model="medicoDetalles.tipo" readonly></b-form-input>
                                   </b-form-group>
                                 </b-col>
                                 <b-col md="6">
                                   <b-form-group label="Cedula Profesional:">
-                                    <b-form-input v-model="pedidosHospital.Cedula_Profesional" readonly></b-form-input>
+                                    <b-form-input v-model="medicoDetalles.cedula_profesional" readonly></b-form-input>
                                   </b-form-group>
                                 </b-col>
                                 <b-col md="6">
                                   <b-form-group label="Estatus:">
-                                    <b-form-input v-model="pedidosHospital.Estatus" readonly></b-form-input>
+                                    <b-form-input v-model="medicoDetalles.estatus" readonly></b-form-input>
+                                  </b-form-group>
+                                </b-col>
+                                <b-col md="6">
+                                  <b-form-group label="Estatus:">
+                                    <b-form-input v-model="medicoDetalles.fecha_contratacion" readonly></b-form-input>
+                                  </b-form-group>
+                                </b-col>
+                                <b-col md="6">
+                                  <b-form-group label="Estatus:">
+                                    <b-form-input v-model="medicoDetalles.fecha_terminacion_contrato"
+                                      readonly></b-form-input>
+                                  </b-form-group>
+                                </b-col>
+                                <b-col md="6">
+                                  <b-form-group label="Estatus:">
+                                    <b-form-input v-model="medicoDetalles.departamento" readonly></b-form-input>
+                                  </b-form-group>
+                                </b-col>
+                                <b-col md="6">
+                                  <b-form-group label="Estatus:">
+                                    <b-form-input v-model="medicoDetalles.fecha_terminacion_contrato"
+                                      readonly></b-form-input>
                                   </b-form-group>
                                 </b-col>
                               </b-row>
@@ -392,7 +413,7 @@ import iqCard from '../../components/xray/cards/iq-card'
 
 import { Form } from 'vee-validate'
 import { useRouter } from 'vue-router'
-
+import axios from 'axios'
 export default {
   name: 'ValidateWizard',
   components: {
@@ -404,9 +425,10 @@ export default {
 
     const redirectToDetailsDispencer = () => {
       router.push('/farmaDis')
-    }
 
+    }
     return { redirectToDetailsDispencer }
+
   },
   data() {
 
@@ -421,6 +443,17 @@ export default {
       patientLastName: '',
       patientSecondLastName: '',
       patientDateOfBirth: '',
+      personalMedicoId: '',
+      medicoDetalles: {
+        persona: '',
+        especialidad: '',
+        tipo: '',
+        cedula_profesional: '',
+        estatus: '',
+        fecha_contratacion: '',
+        fecha_terminacion_contrato: '',
+        departamento: ''
+      },
       columns: [
         { key: 'MEDICAMENTO_ID', label: 'Medicamento', formatter: 'nombreMedicamento' },
         { key: 'DOSIS', label: 'Dosis' },
@@ -435,13 +468,6 @@ export default {
 
       ],
 
-
-      options: [
-        { value: 'idReceta1', text: 'ID Receta 1' },
-        { value: 'idReceta2', text: 'ID Receta 2' },
-        { value: 'idReceta3', text: 'ID Receta 3' }
-      ],
-
       personalMedicoDetails: [],
       personalcolumns: [
         { key: 'MEDICAMENTO_ID', label: 'Medicamento', formatter: 'nombreMedicamento' },
@@ -453,31 +479,58 @@ export default {
       ],
 
 
-      optionsPersonal: [
-        { value: '1', text: '1' },
-        { value: '2', text: '2' },
-        { value: '3', text: '3' }
+      cedulaMedica: [
+
       ],
 
-      medicamentos: {
-        101: 'Paracetamol',
-        102: 'Ibuprofeno',
-        103: 'Tempra',
-        104: 'Agrifen',
-        105: 'PeptoBismol',
-        106: 'Sal de uvas',
-        // Agrega más medicamentos según sea necesario
-      },
-      medicamentosPersonal: {
-        11: 'Tempra',
-        12: 'Buscapina',
-        // Agrega más medicamentos según sea necesario
-      }
+
+
     }
   }, mounted() {
     xray.index()
+    this.selectMedicos()
   },
+
+
+
+
+
   methods: {
+
+    async selectMedicos() {
+      try {
+        const apiPersonalMedico = await axios.get('http://127.0.0.1:8000/hospital/api/v1personal_medico/')
+
+        // Mapear los datos de la primera API
+        this.cedulaMedica = apiPersonalMedico.data.map(item => ({
+          value: item.id,
+          text: item.cedula_profesional,
+        }))
+        
+      } catch (error) {
+        console.error('Error fetching data:', error)
+      }
+    },
+    async mostrarMedicoDetalles(){
+      try {
+        const apiPersonalMedico = await axios.get('http://127.0.0.1:8000/hospital/api/v1personal_medico/')
+        console.log(apiPersonalMedico.data)
+        const medicoSeleccionado = apiPersonalMedico.data.find(medico => medico.persona == this.personalMedicoId)
+        console.log(medicoSeleccionado)
+        this.medicoDetalles.persona = medicoSeleccionado.persona
+        this.medicoDetalles.especialidad = medicoSeleccionado.especialidad
+        this.medicoDetalles.tipo = medicoSeleccionado.tipo
+        this.medicoDetalles.cedula_profesional = medicoSeleccionado.cedula_profesional
+        this.medicoDetalles.estatus = medicoSeleccionado.estatus
+        this.medicoDetalles.fecha_contratacion = medicoSeleccionado.fecha_contratacion
+        this.medicoDetalles.fecha_terminacion_contrato = medicoSeleccionado.fecha_terminacion_contrato
+        this.medicoDetalles.departamento = medicoSeleccionado.departamento
+        
+      } catch (error) {
+        console.error('Error fetching data:', error)
+      }
+    },
+
     onSubmit() {
       this.$router.replace('/user/user-list')
     },
@@ -525,7 +578,7 @@ export default {
 
     changeTab(val) {
 
-
+      console.log(val);
       // Verifica si se ha seleccionado una ID de receta
       //if (val === 2 && !this.idReceta) {
       // Si no se ha seleccionado una ID de receta y ya se ha ingresado la cédula, no hagas nada y devuelve
@@ -564,140 +617,12 @@ export default {
         // Si el usuario regresa a la segunda parte del formulario, asegúrate de restablecer los detalles de la receta médica
         this.recetaMedica = null;
       }
-
-
-
-
+      else if (val === 11) {
+        this.mostrarMedicoDetalles();
+      }
 
       if (val === 2) {
         this.obtenerDatosPacientePorCitaId(this.recetaMedica.CITA_ID)
-        // Simular los detalles de la receta médica (sustituir con datos reales de la base de datos más adelante)
-        if (this.personalMedicoId === '1') { // Verificar la cédula profesional seleccionada
-          this.pedidosHospital = {
-            Persona_ID: 1,
-            Departamento_ID: 1,
-            Especialidad: 'Cardiología',
-            Tipo: 'Médico',
-            Cedula_Profesional: '12345678',
-            Estatus: 'Activo',
-            Fecha_Contratacion: '2023-01-15',
-            Fecha_Terminacion_Contrato: null
-          };
-        } else if (this.personalMedicoId === '2') { // Verificar la cédula profesional seleccionada
-          this.pedidosHospital = {
-            Persona_ID: 2,
-            Departamento_ID: 2,
-            Especialidad: 'Pediatría',
-            Tipo: 'Médico',
-            Cedula_Profesional: '23456789',
-            Estatus: 'Activo',
-            Fecha_Contratacion: '2022-09-20',
-            Fecha_Terminacion_Contrato: null
-          };
-        } else if (this.personalMedicoId === '3') { // Verificar la cédula profesional seleccionada
-          this.pedidosHospital = {
-            Persona_ID: 3,
-            Departamento_ID: 3,
-            Especialidad: 'Oftalmología',
-            Tipo: 'Médico',
-            Cedula_Profesional: '34567890',
-            Estatus: 'Inactivo',
-            Fecha_Contratacion: '2024-02-10',
-            Fecha_Terminacion_Contrato: '2024-12-10'
-          };
-        }
-      } else if (val === 1) {
-        // Si el usuario regresa a la segunda parte del formulario, asegúrate de restablecer los detalles de la receta médica
-        this.pedidosHospital = null;
-      }
-      if (val === 2 && !this.cedula) {
-        // Si el usuario intenta avanzar al paso 2 sin seleccionar una ID de receta, no hagas nada
-        return;
-      }
-
-
-
-      if (val === 3) {
-        // Simula los detalles de la receta médica
-        if (this.idReceta === 'idReceta1') {
-          this.recetaMedicaDetails = [
-            { ID: 1, receta_id: 1, MEDICAMENTO_ID: 101, DOSIS: '1 comprimido cada 12 horas', RECOMENDACIONES: 'Tomar con comida', SOLICITADO: 5, CANTIDAD: 0, PRECIO: 5.99 },
-            { ID: 2, receta_id: 1, MEDICAMENTO_ID: 102, DOSIS: '2 comprimidos antes de dormir', RECOMENDACIONES: 'Tomar con agua', SOLICITADO: 1, CANTIDAD: 0, PRECIO: 8.99 }
-          ];
-        } else if (this.idReceta === 'idReceta2') {
-          this.recetaMedicaDetails = [
-            { ID: 3, receta_id: 2, MEDICAMENTO_ID: 103, DOSIS: '1 cápsula cada 8 horas', RECOMENDACIONES: 'Tomar con leche', SOLICITADO: 3, CANTIDAD: 0, PRECIO: 12.99 },
-            { ID: 4, receta_id: 2, MEDICAMENTO_ID: 104, DOSIS: '1 inyección semanal', RECOMENDACIONES: 'Aplicar en el brazo', SOLICITADO: 2, CANTIDAD: 0, PRECIO: 24.99 }
-          ];
-        } else if (this.idReceta === 'idReceta3') {
-          this.recetaMedicaDetails = [
-            { ID: 5, receta_id: 3, MEDICAMENTO_ID: 105, DOSIS: '1 tableta diaria', RECOMENDACIONES: 'Tomar con agua tibia', SOLICITADO: 1, CANTIDAD: 0, PRECIO: 9.99 },
-            { ID: 6, receta_id: 3, MEDICAMENTO_ID: 106, DOSIS: '2 comprimidos cada 6 horas', RECOMENDACIONES: 'Tomar con comida', SOLICITADO: 8, CANTIDAD: 0, PRECIO: 17.99 }
-          ];
-        }
-      } else if (val === 2) {
-        // Si el usuario regresa al paso 1, limpia los detalles de la receta médica
-        this.recetaMedicaDetails = [];
-      }
-      if (val === 12) {
-        // Simular los detalles de la receta médica (sustituir con datos reales de la base de datos más adelante)
-        if (this.personalMedicoId === '1') { // Verificar la cédula profesional seleccionada
-          this.personalMedicoDetails = [
-            { ID: 1, Departamento_ID: 1, Cedula_Profesional: '12345678', MEDICAMENTO_ID: 11, SOLICITADO: 5, CANTIDAD: 0, PRECIO: 5.99 },
-            { ID: 2, Departamento_ID: 1, Cedula_Profesional: '12345678', MEDICAMENTO_ID: 12, SOLICITADO: 1, CANTIDAD: 0, PRECIO: 8.99 }
-          ];
-        } else if (this.personalMedicoId === '2') { // Verificar la cédula profesional seleccionada
-          this.personalMedicoDetails = [
-            { ID: 3, Departamento_ID: 2, Cedula_Profesional: '23456789', MEDICAMENTO_ID: 11, SOLICITADO: 3, CANTIDAD: 0, PRECIO: 12.99 },
-            { ID: 4, Departamento_ID: 2, Cedula_Profesional: '23456789', MEDICAMENTO_ID: 12, SOLICITADO: 2, CANTIDAD: 0, PRECIO: 24.99 }
-          ];
-        } else if (this.personalMedicoId === '3') { // Verificar la cédula profesional seleccionada
-          this.personalMedicoDetails = [
-            { ID: 5, Departamento_ID: 3, Cedula_Profesional: '34567890', MEDICAMENTO_ID: 11, SOLICITADO: 1, CANTIDAD: 0, PRECIO: 9.99 },
-            { ID: 6, Departamento_ID: 3, Cedula_Profesional: '34567890', MEDICAMENTO_ID: 12, SOLICITADO: 8, CANTIDAD: 0, PRECIO: 17.99 }
-          ];
-        }
-      } else if (val === 11) {
-        // Si el usuario regresa a la segunda parte del formulario, asegúrate de restablecer los detalles de la receta médica
-        this.personalMedicoDetails = [];
-      }
-
-      if (val === 11) {
-        // Simular los detalles de la receta médica (sustituir con datos reales de la base de datos más adelante)
-        if (this.personalMedicoId === '1') { // Verificar la cédula profesional seleccionada
-          this.pedidosHospital = {
-            Persona_ID: 1,
-            Departamento_ID: 1,
-            Especialidad: 'Cardiología',
-            Tipo: 'Médico',
-            Cedula_Profesional: '12345678',
-            Estatus: 'Activo',
-            Fecha_Contratacion: '2023-01-15',
-            Fecha_Terminacion_Contrato: null
-          };
-        } else if (this.personalMedicoId === '2') { // Verificar la cédula profesional seleccionada
-          this.pedidosHospital = {
-            Persona_ID: 2,
-            Departamento_ID: 2,
-            Especialidad: 'Pediatría',
-            Tipo: 'Médico',
-            Cedula_Profesional: '23456789',
-            Estatus: 'Activo',
-            Fecha_Contratacion: '2022-09-20',
-            Fecha_Terminacion_Contrato: null
-          };
-        } else if (this.personalMedicoId === '3') { // Verificar la cédula profesional seleccionada
-          this.pedidosHospital = {
-            Persona_ID: 3,
-            Departamento_ID: 3,
-            Especialidad: 'Oftalmología',
-            Tipo: 'Médico',
-            Cedula_Profesional: '34567890',
-            Estatus: 'Inactivo',
-            Fecha_Contratacion: '2024-02-10',
-            Fecha_Terminacion_Contrato: '2024-12-10'
-          };
-        }
       } else if (val === 1) {
         // Si el usuario regresa a la segunda parte del formulario, asegúrate de restablecer los detalles de la receta médica
         this.pedidosHospital = null;
@@ -735,7 +660,7 @@ export default {
     }
   },
   watch: {
-    selectedOption: function(){
+    selectedOption: function () {
       this.changeTab(1)
     }
   }

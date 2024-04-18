@@ -62,18 +62,15 @@
   </b-container>
 </template>
 
-
 <script>
 import iqCard from '../../components/xray/cards/iq-card'
 import axios from 'axios';
-import { ref } from 'vue'
-
+import { ref, onMounted } from 'vue'
 
 export default {
   name: 'UiDataTable',
   components: { iqCard },
   setup() {
-
     const columns = [
       { key: 'id', label: 'ID', field: 'id', headerClass: 'text-left' },
       { key: 'personalMedicoId', label: 'Personal Médico ID', field: 'personalMedicoId', headerClass: 'text-left' },
@@ -94,28 +91,27 @@ export default {
 
     const fetchData = async () => {
       try {
-        const response1 = await axios.get('http://127.0.0.1:8000/hospital/api/v1c_dispensacion_medicamentos/')
-        const response2 = await axios.get('http://127.0.0.1:8000/hospital/api/v1c_detalle_dispensacion/')
+        const response1 = await axios.get('http://127.0.0.1:8000/hospital/api/v1dispensacion_medicamentos/')
+        const response2 = await axios.get('http://127.0.0.1:8000/hospital/api/v1detalles_dispensacion/')
 
         // Mapear los datos de la primera API
         const data1 = response1.data.map(item => ({
           id: item.id,
-          personalMedicoId : item.Personal_Medico_ID ,
-          recetaId : item.Receta_ID,
-          cantidadSolicitada : item.Total_Medicamentos_Solicitados,
-          cantidadEntregada: item.Total_Medicamentos_Entregados,
-          estatus: item.Estatus
-
+          personalMedicoId: item.personal_medico,
+          recetaId: item.receta,
+          cantidadSolicitada: item.total_medicamentos_solicitados,
+          cantidadEntregada: item.total_medicamentos_entregados,
+          fechaVenta: item.fecha_registro,
+          estatus: item.estatus
         }))
 
         // Mapear los datos de la segunda API
         const data2 = response2.data.map(item => ({
-          id: item.Dispensacion_ID,
-          detalleRecetaId: item.Detalle_Receta_ID ,
-          cantidadEntregada: item.Cantidad_Entregada ,
-          precioUnitario:item.Precio_Unitario ,
-          fechaVenta:item.Fecha_Entrega,
-          importe: item.Precio_Total 
+          id: item.dispensacion,
+          detalleRecetaId: item.detalle_receta,
+          cantidadEntregada: item.cantidad_entregada,
+          precioUnitario: item.precio_unitario,
+          importe: item.precio_total
         }))
 
         // Combina los datos de ambas API
@@ -124,21 +120,41 @@ export default {
           return correspondingItem ? { ...item1, ...correspondingItem } : item1
         })
 
+        // Obtener los detalles del medicamento usando el ID de la receta
+        const medicamentoRequests = combinedData.map(async item => {
+          try {
+            const medicamentoResponse = await axios.get(`http://127.0.0.1:8000/hospital/api/v1medicamentos/${item.recetaId}`)
+            const medicamentoData = medicamentoResponse.data
+            return {
+              ...item,
+              nombreGenerico: medicamentoData.nombre_generico,
+              nombreComercial: medicamentoData.nombre_comercial,
+              viaAdministrativa: medicamentoData.via_administracion,
+              tipoPresentacion: medicamentoData.presentacion
+            }
+          } catch (error) {
+            console.error('Error fetching medicamento data:', error)
+            return item
+          }
+        })
+
+        // Esperar a que todas las solicitudes de detalles de medicamentos se completen
+        const medicamentoDetails = await Promise.all(medicamentoRequests)
+
         // Asignar el conjunto combinado de datos a rows
-        rows.value = combinedData
+        rows.value = medicamentoDetails
       } catch (error) {
         console.error('Error fetching data:', error)
       }
     }
 
-    fetchData()
+    // Llamar a fetchData() cada vez que el componente se monte
+    onMounted(fetchData)
 
     const remove = (item) => {
       let index = rows.value.indexOf(item)
       rows.value.splice(index, 1)
     }
-
-
 
     const formatDate = (date) => {
       const options = { year: 'numeric', month: 'numeric', day: 'numeric' }
@@ -148,6 +164,8 @@ export default {
     return { columns, rows, remove, formatDate }
   }
 }
-
-
 </script>
+
+<style scoped>
+/* Aquí puedes agregar estilos específicos para este componente si es necesario */
+</style>

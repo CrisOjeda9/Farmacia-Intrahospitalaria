@@ -179,11 +179,23 @@ export default {
     }
 
     fetchData()
-
-    const remove = (item) => {
-      let index = rows.value.indexOf(item)
-      rows.value.splice(index, 1)
+    const remove = async (item) => {
+  try {
+    // Eliminar el documento de la primera API (lotes_medicamentos)
+    await axios.delete(`http://127.0.0.1:8000/hospital/api/v1lotes_medicamentos/${item.id}`);
+    
+    // Eliminar el documento de la segunda API (detalle_lotes)
+    await axios.delete(`http://127.0.0.1:8000/hospital/api/v1detalle_lotes/${item.id}`);
+    
+    // Eliminar el documento de la lista local
+    let index = rows.value.indexOf(item);
+    if (index !== -1) {
+      rows.value.splice(index, 1);
     }
+  } catch (error) {
+    console.error('Error removing item:', error);
+  }
+}
 
 
 
