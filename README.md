@@ -6,7 +6,8 @@ Repositorio del modulo de farmacia Intrahospitalaria
 
 ### Organigrama CMD
 
-![Gray Simple Company Structure Organizational Chart (1)](https://github.com/CrisOjeda9/Farmacia-Intrahospitalaria/assets/161864911/f4f653d0-3357-4ed5-9fb8-df429e58eb2c)
+![Organigrama CMD](https://github.com/CrisOjeda9/Farmacia-Intrahospitalaria/assets/161864911/e1db8a13-486b-44c8-9e50-a94ab4cc5d96)
+
 
 <justify>
 
