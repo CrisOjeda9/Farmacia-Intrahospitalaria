@@ -29,7 +29,9 @@ class Bitacora(models.Model):
 
 class Citas(models.Model):
     id = models.AutoField(db_column='ID', primary_key=True)  # Field name made lowercase.
-    
+    personal_medico = models.ForeignKey('PersonalMedico', models.DO_NOTHING, db_column='Personal_Medico_ID')  # Field name made lowercase.
+    personas = models.ForeignKey('Personas', models.DO_NOTHING, db_column='Personas_ID')  # Field name made lowercase.
+    fecha_cita = models.DateTimeField(db_column='Fecha_Cita')  # Field name made lowercase.
 
     class Meta:
         managed = False
@@ -77,7 +79,7 @@ class DetalleLotes(models.Model):
 
 
 class DetallesDispensacion(models.Model):
-    dispensacion = models.OneToOneField('DispensacionMedicamentos', models.DO_NOTHING, db_column='Dispensacion_ID', primary_key=True)  # Field name made lowercase.
+    dispensacion = models.OneToOneField('DispensacionMedicamentos', models.DO_NOTHING, db_column='Dispensacion_ID', primary_key=True)
     detalle_receta = models.ForeignKey('RecetaMedicaDetalle', models.DO_NOTHING, db_column='Detalle_Receta_ID')  # Field name made lowercase.
     cantidad_entregada = models.PositiveIntegerField(db_column='Cantidad_Entregada')  # Field name made lowercase.
     precio_unitario = models.DecimalField(db_column='Precio_Unitario', max_digits=10, decimal_places=2)  # Field name made lowercase.
@@ -121,7 +123,7 @@ class Medicamentos(models.Model):
     nombre_generico = models.CharField(db_column='Nombre_Generico', max_length=250)  # Field name made lowercase.
     via_administracion = models.CharField(db_column='Via_Administracion', max_length=11, blank=True, null=True)  # Field name made lowercase.
     presentacion = models.CharField(db_column='Presentacion', max_length=12, blank=True, null=True)  # Field name made lowercase.
-    estatus = models.BooleanField(db_column='Estatus', blank=True, null=True)  # Field name made lowercase. This field type is a guess.
+    estatus = models.TextField(db_column='Estatus', blank=True, null=True)  # Field name made lowercase. This field type is a guess.
     cantidad = models.CharField(db_column='Cantidad', max_length=45)  # Field name made lowercase.
 
     class Meta:
