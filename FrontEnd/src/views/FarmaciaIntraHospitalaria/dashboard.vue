@@ -32,7 +32,7 @@
       <b-col lg="6">
         <iq-card>
           <template v-slot:headerTitle>
-            <h4>Medicamentos más solicitados</h4>
+            <h4>Medicamentos solicitados y entregados</h4>
           </template>
           <template v-slot:body>
             <canvas id="medChart" width="400" height="350"></canvas>
