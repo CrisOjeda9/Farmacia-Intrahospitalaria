@@ -8,7 +8,7 @@ Repositorio del modulo de farmacia Intrahospitalaria
 
 ![Gray Simple Company Structure Organizational Chart (1)](https://github.com/CrisOjeda9/Farmacia-Intrahospitalaria/assets/161864911/f4f653d0-3357-4ed5-9fb8-df429e58eb2c)
 
-
+<justify>
 
 
 ### Objetivo
@@ -197,7 +197,7 @@ buscan atención médica de calidad y compasión en su comunidad.
 8. **Copias de Seguridad**: El sistema debe realizar copias de seguridad regulares de los datos almacenados para garantizar la integridad y la disponibilidad de la información en caso de fallos del sistema o emergencias.
 9.  **Registro Detallado y Auditoría**: Todas las transacciones y actividades realizadas en el sistema deben ser registradas de manera detallada y auditada regularmente para detectar posibles irregularidades y mantener la integridad del sistema.
 10.  **Coordinación con Otros Módulos Hospitalarios**: Se deben establecer mecanismos de coordinación eficientes con otros módulos hospitalarios para garantizar una gestión integrada y fluida de los recursos y la información.
-
+</justify>
 
 ### Tablas SQL 
 ###### PROPIETARIO(OWNER)
@@ -214,7 +214,8 @@ buscan atención médica de calidad y compasión en su comunidad.
 
 ### Modelo Relacional
 
-![ModeloBD](https://github.com/CrisOjeda9/Farmacia-Intrahospitalaria/assets/161864911/143b3414-4ff9-492e-8b7c-88e4b87c1a79)
+![Modelo Entidad-Relacion](https://github.com/CrisOjeda9/Farmacia-Intrahospitalaria/assets/161864911/7771cde7-a9e3-494e-8c03-0935abc9a3f1)
+
 
 
 
