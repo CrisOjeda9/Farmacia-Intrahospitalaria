@@ -8,8 +8,15 @@
           </template>
           <template v-slot:body>
             <b-row>
+              <b-col md="6">
+                <b-form-group label="Filtrar por Nombre del Medicamento">
+                  <b-form-input v-model="filter" placeholder="Ingrese el nombre del medicamento"></b-form-input>
+                </b-form-group>
+              </b-col>
+            </b-row>
+            <b-row>
               <b-col md="12" class="table-responsive w-100">
-                <b-table striped bordered hover :items="rows" :fields="columns">
+                <b-table striped bordered hover :items="filteredRows" :fields="columns">
                   <template v-slot:cell(id)="data">
                     <span>{{ data.item.id }}</span>
                   </template>
@@ -65,12 +72,27 @@
 <script>
 import iqCard from '../../components/xray/cards/iq-card'
 import axios from 'axios';
-import { ref, onMounted } from 'vue'
+import { ref, onMounted ,computed} from 'vue'
 
 export default {
   name: 'UiDataTable',
   components: { iqCard },
   setup() {
+    const filter = ref('')
+
+    // Filtrar las filas según el nombre del medicamento
+    const filteredRows = computed(() => {
+  const searchTerm = filter.value.toLowerCase();
+  return filter.value 
+    ? rows.value.filter(row => 
+      row.nombreGenerico.toLowerCase().includes(searchTerm) ||
+      row.nombreComercial.toLowerCase().includes(searchTerm) ||
+      row.tipoPresentacion.toLowerCase().includes(searchTerm) ||
+      row.viaAdministrativa.toLowerCase().includes(searchTerm)
+    ) 
+    : rows.value;
+});
+
     const columns = [
       { key: 'id', label: 'ID', field: 'id', headerClass: 'text-left' },
       { key: 'personalMedicoId', label: 'Personal Médico ID', field: 'personalMedicoId', headerClass: 'text-left' },
@@ -93,7 +115,7 @@ export default {
       try {
         const response1 = await axios.get('http://127.0.0.1:8000/hospital/api/v1dispensacion_medicamentos/')
         const response2 = await axios.get('http://127.0.0.1:8000/hospital/api/v1detalles_dispensacion/')
-
+        
         // Mapear los datos de la primera API
         const data1 = response1.data.map(item => ({
           id: item.id,
@@ -107,16 +129,15 @@ export default {
 
         // Mapear los datos de la segunda API
         const data2 = response2.data.map(item => ({
-          id: item.dispensacion,
           detalleRecetaId: item.detalle_receta,
           cantidadEntregada: item.cantidad_entregada,
           precioUnitario: item.precio_unitario,
           importe: item.precio_total
         }))
 
-        // Combina los datos de ambas API
+        // Combinar los datos de ambas API basados en el detalle de receta
         const combinedData = data1.map(item1 => {
-          const correspondingItem = data2.find(item2 => item1.id === item2.id)
+          const correspondingItem = data2.find(item2 => item1.recetaId === item2.detalleRecetaId)
           return correspondingItem ? { ...item1, ...correspondingItem } : item1
         })
 
@@ -161,7 +182,7 @@ export default {
       return new Date(date).toLocaleDateString('es-ES', options)
     }
 
-    return { columns, rows, remove, formatDate }
+    return { columns, rows, remove, formatDate ,filter, filteredRows}
   }
 }
 </script>

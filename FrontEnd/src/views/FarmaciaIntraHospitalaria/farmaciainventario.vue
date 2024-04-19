@@ -8,9 +8,18 @@
           </template>
           <template v-slot:body>
             <b-row>
+              <b-col md="6">
+                <b-form-group label="Filtrar por Nombre del Medicamento">
+                  <b-form-input v-model="filter" placeholder="Ingrese el nombre del medicamento"></b-form-input>
+                </b-form-group>
+              </b-col>
+            </b-row>
+
+
+            <b-row>
 
               <b-col md="12" class="table-responsive w-100">
-                <b-table striped bordered hover :items="rows" :fields="columns">
+                <b-table striped bordered hover :items="filteredRows" :fields="columns">
                   <template v-slot:cell(id)="data">
                     <span>{{ data.index + 1 }}</span>
                   </template>
@@ -44,7 +53,7 @@
                     <span>{{ data.item.precio_venta }}</span>
                   </template>
 
-              
+
 
                   <template v-slot:cell(fecha_solicitud)="data">
                     <span>{{ formatDate(data.item.fecha_solicitud) }}</span>
@@ -81,7 +90,7 @@
 </template>
 
 <script>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { xray } from '../../config/pluginInit'
 import iqCard from '../../components/xray/cards/iq-card'
@@ -92,6 +101,23 @@ export default {
   components: { iqCard },
   setup() {
     const router = useRouter()
+    // Define el filtro por nombre del medicamento
+    const filter = ref('')
+
+    // Filtrar las filas según el nombre del medicamento
+    const filteredRows = computed(() => {
+  const searchTerm = filter.value.toLowerCase();
+  return filter.value 
+    ? rows.value.filter(row => 
+      row.nombre_generico.toLowerCase().includes(searchTerm) ||
+      row.nombre_comercial.toLowerCase().includes(searchTerm) ||
+      row.tipo_presentacion.toLowerCase().includes(searchTerm) ||
+      row.via_administracion.toLowerCase().includes(searchTerm) ||
+      row.marca.toLowerCase().includes(searchTerm)
+    ) 
+    : rows.value;
+});
+
 
     const redirectToNewMedicine = () => {
       router.push('/nuevoMed')
@@ -163,7 +189,7 @@ export default {
         // Obtener detalles del medicamento para cada elemento
         for (const item of combinedData) {
           const medicamentoDetails = await fetchMedicamento(item.id);
-          
+
           if (medicamentoDetails) {
             item.nombre_generico = medicamentoDetails.nombre_generico;
             item.nombre_comercial = medicamentoDetails.nombre_comercial;
@@ -180,22 +206,22 @@ export default {
 
     fetchData()
     const remove = async (item) => {
-  try {
-    // Eliminar el documento de la primera API (lotes_medicamentos)
-    await axios.delete(`http://127.0.0.1:8000/hospital/api/v1lotes_medicamentos/${item.id}`);
-    
-    // Eliminar el documento de la segunda API (detalle_lotes)
-    await axios.delete(`http://127.0.0.1:8000/hospital/api/v1detalle_lotes/${item.id}`);
-    
-    // Eliminar el documento de la lista local
-    let index = rows.value.indexOf(item);
-    if (index !== -1) {
-      rows.value.splice(index, 1);
+      try {
+        // Eliminar el documento de la primera API (lotes_medicamentos)
+        await axios.delete(`http://127.0.0.1:8000/hospital/api/v1lotes_medicamentos/${item.id}`);
+
+        // Eliminar el documento de la segunda API (detalle_lotes)
+        await axios.delete(`http://127.0.0.1:8000/hospital/api/v1detalle_lotes/${item.id}`);
+
+        // Eliminar el documento de la lista local
+        let index = rows.value.indexOf(item);
+        if (index !== -1) {
+          rows.value.splice(index, 1);
+        }
+      } catch (error) {
+        console.error('Error removing item:', error);
+      }
     }
-  } catch (error) {
-    console.error('Error removing item:', error);
-  }
-}
 
 
 
@@ -204,7 +230,7 @@ export default {
       return new Date(date).toLocaleDateString('es-ES', options)
     }
 
-    return { redirectToNewMedicine, columns, rows, remove, formatDate }
+    return { redirectToNewMedicine, columns, rows, remove, formatDate, filter, filteredRows }
   },
   mounted() {
     xray.index()

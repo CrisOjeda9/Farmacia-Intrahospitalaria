@@ -41,7 +41,7 @@
                           <div id="bank" class="wizard-step"
                             :class="`${currentindex == 3 ? 'active' : ''} ${currentindex > 3 ? 'done active' : ''}`">
                             <a href="#bank-detail" class="btn btn-default disabled active"> <i
-                                class="ri-camera-fill text-success"></i><span>Receta dispensacion</span> </a>
+                                class="ri-file-fill text-success"></i><span>Receta dispensacion</span> </a>
                           </div>
                           <div id="confirm" class="wizard-step"
                             :class="`${currentindex == 4 ? 'active' : ''} ${currentindex > 4 ? 'done active' : ''}`">
@@ -62,14 +62,9 @@
                               </b-row>
                               <b-row>
                                 <b-col md="6">
-                                  <b-form-group label="ID de Receta Médica: *">
-                                    <!-- Utilizamos un componente de selección -->
-                                    <b-form-select v-model="idReceta" :options="options" :rules="isRequire"
-                                      :class="{ 'is-invalid': errors.idReceta }"></b-form-select>
-                                    <div class="invalid-feedback">
-                                      <span>{{ errors.idReceta }}</span>
-                                    </div>
-                                  </b-form-group>
+                                  <b-form-select v-model="idReceta" :options="recetaMedica" :rules="isRequire"
+                                    :class="{ 'is-invalid': errors.idReceta }">
+                                  </b-form-select>
                                 </b-col>
                               </b-row>
                             </div>
@@ -122,7 +117,13 @@
                                   {{ data.item.ID }}
                                 </template>
                                 <template v-slot:cell(MEDICAMENTO_ID)="data">
-                                  {{ medicamentos[data.item.MEDICAMENTO_ID] }}
+                                  {{ data.item.Medicamento.nombre_generico }}
+                                </template>
+                                <template v-slot:cell(DOSIS)="data">
+                                  {{ data.item.DOSIS }}
+                                </template>
+                                <template v-slot:cell(RECOMENDACIONES)="data">
+                                  {{ data.item.RECOMENDACIONES }}
                                 </template>
 
                                 <template v-slot:cell(SOLICITADO)="data">
@@ -220,7 +221,7 @@
                           <div id="bank" class="wizard-step"
                             :class="`${currentindex == 3 ? 'active' : ''} ${currentindex > 3 ? 'done active' : ''}`">
                             <a href="#bank-detail" class="btn btn-default disabled active"> <i
-                                class="ri-camera-fill text-success"></i><span>Solicitud</span> </a>
+                                class="ri-file-fill text-success"></i><span>Solicitud</span> </a>
                           </div>
                           <div id="confirm" class="wizard-step"
                             :class="`${currentindex == 4 ? 'active' : ''} ${currentindex > 4 ? 'done active' : ''}`">
@@ -241,13 +242,10 @@
                               </b-row>
                               <b-row>
                                 <b-col md="6">
-                                  <b-form-group label="Personal Médico ID *">
-                                    <b-form-select v-model="personalMedicoId" :options="cedulaMedica" :rules="isRequire"
-                                      :class="{ 'is-invalid': errors.personalMedicoId }"></b-form-select>
-                                    <div class="invalid-feedback">
-                                      <span>{{ errors.personalMedicoId }}</span>
-                                    </div>
-                                  </b-form-group>
+                                  <b-form-select v-model="personalMedicoId" :options="cedulaMedica" :rules="isRequire"
+                                    :class="{ 'is-invalid': errors.personalMedicoId }">
+                                  </b-form-select>
+
 
                                 </b-col>
                               </b-row>
@@ -257,13 +255,12 @@
                           </fieldset>
                         </div>
                         <div :class="`${currentindex == 11 ? 'show' : 'd-none'}`">
-
                           <fieldset>
                             <div class="form-card text-start">
-                              <h3 class="mb-4">Detalles del Personal Medico:</h3>
+                              <h3 class="mb-4">Detalles del Personal Médico:</h3>
                               <b-row v-if="medicoDetalles">
                                 <b-col md="6">
-                                  <b-form-group label="Departamento ID:">
+                                  <b-form-group label="Persona ID:">
                                     <b-form-input v-model="medicoDetalles.persona" readonly></b-form-input>
                                   </b-form-group>
                                 </b-col>
@@ -288,29 +285,16 @@
                                   </b-form-group>
                                 </b-col>
                                 <b-col md="6">
-                                  <b-form-group label="Estatus:">
+                                  <b-form-group label="Fecha Contratación:">
                                     <b-form-input v-model="medicoDetalles.fecha_contratacion" readonly></b-form-input>
                                   </b-form-group>
                                 </b-col>
                                 <b-col md="6">
-                                  <b-form-group label="Estatus:">
-                                    <b-form-input v-model="medicoDetalles.fecha_terminacion_contrato"
-                                      readonly></b-form-input>
-                                  </b-form-group>
-                                </b-col>
-                                <b-col md="6">
-                                  <b-form-group label="Estatus:">
+                                  <b-form-group label="Departamento:">
                                     <b-form-input v-model="medicoDetalles.departamento" readonly></b-form-input>
                                   </b-form-group>
                                 </b-col>
-                                <b-col md="6">
-                                  <b-form-group label="Estatus:">
-                                    <b-form-input v-model="medicoDetalles.fecha_terminacion_contrato"
-                                      readonly></b-form-input>
-                                  </b-form-group>
-                                </b-col>
                               </b-row>
-
                             </div>
                             <a href="#payment" @click="changeTab(12)"
                               class="btn btn-primary next action-button float-end" value="Next">Next</a>
@@ -318,8 +302,9 @@
                               class="btn btn-dark previous action-button-previous float-end me-1"
                               value="Previous">Previous</a>
                           </fieldset>
-
                         </div>
+
+
                         <div id="payment" :class="`${currentindex == 12 ? 'show' : 'd-none'}`">
                           <fieldset>
                             <div class="form-card text-start">
@@ -330,7 +315,7 @@
                                   {{ data.item.ID }}
                                 </template>
                                 <template v-slot:cell(MEDICAMENTO_ID)="data">
-                                  {{ medicamentosPersonal[data.item.MEDICAMENTO_ID] }}
+                                  {{ data.item.Medicamento.nombre_generico }}
                                 </template>
                                 <template v-slot:cell(Departamento_ID)="data">
                                   {{ data.item.Departamento_ID }}
@@ -338,6 +323,9 @@
                                 <!-- Agrega otras columnas aquí -->
                                 <template v-slot:cell(PRECIO)="data">
                                   {{ data.item.PRECIO }}
+                                </template>
+                                <template v-slot:cell(SOLICITADO)="data">
+                                  {{ data.item.SOLICITADO }}
                                 </template>
                                 <template v-slot:cell(CANTIDAD)="data">
                                   <b-form-input v-model="data.item.CANTIDAD" type="number" min="0"
@@ -353,7 +341,7 @@
                             </div>
                             <!-- Ventana fija para mostrar el total -->
                             <div class="fixed-bottom bg-light p-3">
-                              <h4 class="text-center">Venta Total: {{ totalVenta }}</h4>
+                              <h4 class="text-center">Venta Total: {{ totalVentaCalculada }}</h4>
                             </div>
 
                             <a href="#payment" @click="changeTab(4)"
@@ -434,26 +422,29 @@ export default {
 
     return {
       selectedOption: 'option1', // Opción predeterminada seleccionada
-      idReceta: null, // Variable para almacenar la ID de receta seleccionada
+      idReceta: '', // Variable para almacenar la ID de receta seleccionada
+      recetas: [], // Array para almacenar las opciones de las recetas
       cedula: null, // Variable para almacenar la ID de receta seleccionada
       currentindex: 1,
       users: [],
-      recetaMedicaDetails: [],
       patientName: '',
       patientLastName: '',
       patientSecondLastName: '',
       patientDateOfBirth: '',
       personalMedicoId: '',
-      medicoDetalles: {
-        persona: '',
-        especialidad: '',
-        tipo: '',
-        cedula_profesional: '',
-        estatus: '',
-        fecha_contratacion: '',
-        fecha_terminacion_contrato: '',
-        departamento: ''
-      },
+      recetaMedicaDetails: [ // Datos estáticos para la tabla
+        { ID: 1, Medicamento: { nombre_generico: 'Medicamento A' }, DOSIS: '1 comprimido', RECOMENDACIONES: 'Tomar con comida', SOLICITADO: 10, CANTIDAD: 0, PRECIO: 5, ESTATUS: 'Activo' },
+        { ID: 2, Medicamento: { nombre_generico: 'Medicamento B' }, DOSIS: '2 comprimidos', RECOMENDACIONES: 'Tomar antes de dormir', SOLICITADO: 5, CANTIDAD: 0, PRECIO: 8, ESTATUS: 'Inactivo' },
+        // Agrega más objetos de datos según sea necesario
+      ], medicoDetalles: [],
+      persona: '',
+      especialidad: '',
+      tipo: '',
+      cedula_profesional: '',
+      estatus: '',
+      fecha_contratacion: '',
+      fecha_terminacion_contrato: '',
+      departamento: '',
       columns: [
         { key: 'MEDICAMENTO_ID', label: 'Medicamento', formatter: 'nombreMedicamento' },
         { key: 'DOSIS', label: 'Dosis' },
@@ -468,7 +459,31 @@ export default {
 
       ],
 
-      personalMedicoDetails: [],
+      personalMedicoDetails: [
+  // Datos estáticos para la tabla
+  { 
+    ID: 1, 
+    Medicamento:{ nombre_generico: 'Medicamento A' },
+    DOSIS: '1 comprimido', 
+    RECOMENDACIONES: 'Tomar con comida', 
+    SOLICITADO: 10, 
+    CANTIDAD: 0, 
+    PRECIO: 5, 
+    ESTATUS: 'Activo' // Agregamos el dato de estatus
+  },
+  { 
+    ID: 2, 
+    Medicamento: { nombre_generico: 'Medicamento B' },
+    DOSIS: '2 comprimidos', 
+    RECOMENDACIONES: 'Tomar antes de dormir', 
+    SOLICITADO: 5, 
+    CANTIDAD: 0, 
+    PRECIO: 8, 
+    ESTATUS: 'Inactivo' // Agregamos el dato de estatus
+  },
+  // Puedes agregar más objetos de datos según sea necesario
+],
+
       personalcolumns: [
         { key: 'MEDICAMENTO_ID', label: 'Medicamento', formatter: 'nombreMedicamento' },
         { key: 'SOLICITADO', label: 'Solicitado' },
@@ -482,13 +497,16 @@ export default {
       cedulaMedica: [
 
       ],
+      recetaMedica: [
 
+      ],
 
 
     }
   }, mounted() {
     xray.index()
     this.selectMedicos()
+    this.selectRecetas()
   },
 
 
@@ -499,37 +517,98 @@ export default {
 
     async selectMedicos() {
       try {
-        const apiPersonalMedico = await axios.get('http://127.0.0.1:8000/hospital/api/v1personal_medico/')
+        const apiPersonalMedico = await axios.get('http://127.0.0.1:8000/hospital/api/v1personal_medico/');
 
-        // Mapear los datos de la primera API
+        // Mapear los datos de la API para mostrar las cédulas y guardar las IDs
         this.cedulaMedica = apiPersonalMedico.data.map(item => ({
-          value: item.id,
-          text: item.cedula_profesional,
-        }))
-        
+          value: item.id, // Aquí guardamos la ID del personal médico
+          text: item.cedula_profesional, // Aquí mostramos la cédula profesional
+        }));
       } catch (error) {
-        console.error('Error fetching data:', error)
+        console.error('Error fetching data:', error);
       }
     },
-    async mostrarMedicoDetalles(){
+    async mostrarMedicoDetalles(cedulaSeleccionada) {
       try {
-        const apiPersonalMedico = await axios.get('http://127.0.0.1:8000/hospital/api/v1personal_medico/')
-        console.log(apiPersonalMedico.data)
-        const medicoSeleccionado = apiPersonalMedico.data.find(medico => medico.persona == this.personalMedicoId)
-        console.log(medicoSeleccionado)
-        this.medicoDetalles.persona = medicoSeleccionado.persona
-        this.medicoDetalles.especialidad = medicoSeleccionado.especialidad
-        this.medicoDetalles.tipo = medicoSeleccionado.tipo
-        this.medicoDetalles.cedula_profesional = medicoSeleccionado.cedula_profesional
-        this.medicoDetalles.estatus = medicoSeleccionado.estatus
-        this.medicoDetalles.fecha_contratacion = medicoSeleccionado.fecha_contratacion
-        this.medicoDetalles.fecha_terminacion_contrato = medicoSeleccionado.fecha_terminacion_contrato
-        this.medicoDetalles.departamento = medicoSeleccionado.departamento
-        
+        const response = await axios.get(`http://127.0.0.1:8000/hospital/api/v1personal_medico/?cedula_profesional=${cedulaSeleccionada}`)
+        const medicoSeleccionado = response.data[0]; // Suponiendo que la API devuelve un solo resultado
+
+        // Actualizar los detalles del personal médico con los datos obtenidos
+        this.medicoDetalles.persona = medicoSeleccionado.persona;
+        this.medicoDetalles.especialidad = medicoSeleccionado.especialidad;
+        this.medicoDetalles.tipo = medicoSeleccionado.tipo;
+        this.medicoDetalles.cedula_profesional = medicoSeleccionado.cedula_profesional;
+        this.medicoDetalles.estatus = medicoSeleccionado.estatus;
+        this.medicoDetalles.fecha_contratacion = medicoSeleccionado.fecha_contratacion;
+        this.medicoDetalles.fecha_terminacion_contrato = medicoSeleccionado.fecha_terminacion_contrato;
+        this.medicoDetalles.departamento = medicoSeleccionado.departamento;
+
       } catch (error) {
-        console.error('Error fetching data:', error)
+        console.error('Error fetching data:', error);
+      }
+    }
+    ,
+
+
+
+
+
+
+
+
+
+
+
+
+
+    async selectRecetas() {
+      try {
+        const apiRecetaMedica = await axios.get('http://127.0.0.1:8000/hospital/api/v1receta_medica/');
+
+        // Mapear los datos de la API para mostrar las cédulas y guardar las IDs
+        this.recetaMedica = apiRecetaMedica.data.map(item => ({
+          value: item.id, // Aquí guardamos la ID del personal médico
+          text: item.cita, // Aquí mostramos la cédula profesional
+        }));
+      } catch (error) {
+        console.error('Error fetching data:', error);
       }
     },
+
+    async cargarDatosPersona() {
+      try {
+        // Realizar llamada a la API para obtener los datos de la persona basados en el ID de la receta
+        const response = await fetch(`http://127.0.0.1:8000/hospital/api/v1receta_medica/${this.idReceta}`);
+        const data = await response.json();
+
+        // Obtener el ID de cita de la receta
+        const citaId = data.cita;
+
+        // Realizar llamada a la API para obtener los datos de la cita
+        const citaResponse = await fetch(`http://127.0.0.1:8000/hospital/api/v1citas/${citaId}`);
+        const citaData = await citaResponse.json();
+
+        // Obtener el ID de la persona de la cita
+        const personaId = citaData.personas;
+
+        // Realizar llamada a la API para obtener los datos de la persona
+        const personaResponse = await fetch(`http://127.0.0.1:8000/hospital/api/v1personas/${personaId}`);
+        const personaData = await personaResponse.json();
+
+        // Asignar los datos de la persona a las variables del componente
+        this.patientName = personaData.nombre;
+        this.patientLastName = personaData.primer_apellido;
+        this.patientSecondLastName = personaData.segundo_apellido;
+        this.patientDateOfBirth = personaData.fecha_nacimiento;
+      } catch (error) {
+        console.error('Error al cargar los datos de la persona:', error);
+      }
+    },
+
+
+
+
+
 
     onSubmit() {
       this.$router.replace('/user/user-list')
@@ -614,11 +693,15 @@ export default {
         }
       }
       else if (val === 1) {
-        // Si el usuario regresa a la segunda parte del formulario, asegúrate de restablecer los detalles de la receta médica
-        this.recetaMedica = null;
+        this.mostrarMedicoDetalles(this.idReceta);
+
+        console.log(this.idReceta)
       }
       else if (val === 11) {
-        this.mostrarMedicoDetalles();
+        this.mostrarMedicoDetalles(this.personalMedicoId);
+
+        console.log(this.personalMedicoId)
+
       }
 
       if (val === 2) {
@@ -657,11 +740,22 @@ export default {
       return this.recetaMedicaDetails.reduce((total, item) => {
         return total + (item.CANTIDAD * item.PRECIO);
       }, 0).toFixed(2);
-    }
+    },
+    
+    totalVentaCalculada() {
+    return this.personalMedicoDetails.reduce((total, item) => {
+      return total + (item.CANTIDAD * item.PRECIO);
+    }, 0).toFixed(2);
+  }
+ 
   },
   watch: {
     selectedOption: function () {
       this.changeTab(1)
+    },
+    idReceta() {
+      // Cuando se selecciona un nuevo ID de receta, cargar los datos de la persona
+      this.cargarDatosPersona();
     }
   }
 }
